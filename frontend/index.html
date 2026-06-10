@@ -97,8 +97,8 @@
   </div>
 
   <script>
-    // ==================== CHANGE THIS LATER ====================
-    const API_URL = "https://YOUR-BACKEND.onrender.com";   // ← We will update this after deploying backend
+    // ✅ UPDATED: Live Backend URL
+    const API_URL = "https://drona-lingua-backend.onrender.com";
 
     let currentUser = null;
     let currentModuleData = null;
@@ -175,7 +175,7 @@
       { id: 20, title: "Module 20: Final Mastery Challenge", type: "single", words: [20,22,24,26,28,29] }
     ];
 
-    // ==================== TIMER ====================
+    // ==================== TIMER & FUNCTIONS ====================
     function startSessionTimer() {
       if (sessionStartTime === null) {
         sessionStartTime = Date.now();
