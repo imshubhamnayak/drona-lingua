@@ -20,6 +20,19 @@
     .success { background: #22c55e; color: white; }
     .warning { background: #f59e0b; color: white; }
     .timer { font-size: 24px; font-weight: 600; color: #60a5fa; }
+    .dashboard-btn {
+      background: #334155;
+      color: #e2e8f0;
+      padding: 8px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dashboard-btn:hover { background: #475569; }
   </style>
 </head>
 <body>
@@ -33,6 +46,11 @@
       <div class="timer" id="timer">00:00</div>
       <div id="hearts">❤️❤️❤️❤️❤️</div>
       <div style="color:#eab308;">XP <span id="xp">0</span></div>
+      
+      <!-- Performance Dashboard Button -->
+      <a href="/performance.html" target="_blank" class="dashboard-btn">
+        📊 Performance
+      </a>
     </div>
   </div>
 
@@ -97,7 +115,6 @@
   </div>
 
   <script>
-    // ✅ UPDATED: Live Backend URL
     const API_URL = "https://drona-lingua-backend.onrender.com";
 
     let currentUser = null;
@@ -113,9 +130,8 @@
     let hearts = 5;
     let completedModules = [];
 
-    // ==================== WORDBANK & MODULES ====================
+    // ==================== WORDBANK ====================
     const wordBank = [
-      // PURE SA (स)
       { hindi: "सही", roman: "Sahi", tip: "Soft dental 'Sa'" },
       { hindi: "सरकार", roman: "Sarkar", tip: "Soft 'Sa'" },
       { hindi: "सामान", roman: "Samaan", tip: "Soft 'Sa'" },
@@ -126,8 +142,6 @@
       { hindi: "सवाल", roman: "Sawal", tip: "Soft 'Sa'" },
       { hindi: "सोच", roman: "Soch", tip: "Soft 'Sa'" },
       { hindi: "साफ", roman: "Saaf", tip: "Soft 'Sa'" },
-
-      // PURE SHA (श)
       { hindi: "शहर", roman: "Shahar", tip: "Strong 'Sha'" },
       { hindi: "शेर", roman: "Sher", tip: "Strong 'Sha'" },
       { hindi: "शाम", roman: "Shaam", tip: "Strong 'Sha'" },
@@ -138,8 +152,6 @@
       { hindi: "शोर", roman: "Shor", tip: "Strong 'Sha'" },
       { hindi: "शायद", roman: "Shayad", tip: "Strong 'Sha'" },
       { hindi: "शक्ति", roman: "Shakti", tip: "Strong 'Sha'" },
-
-      // CONTRAST SENTENCES
       { hindi: "शहर में सही सामान है", roman: "Shahar mein sahi samaan hai", tip: "Sha + Sa contrast" },
       { hindi: "शाम को शॉप बंद हो जाती है", roman: "Shaam ko shop band ho jaati hai", tip: "Sha + Sa contrast" },
       { hindi: "सरकार ने शहर में नई योजना शुरू की", roman: "Sarkar ne shahar mein nayi yojana shuru ki", tip: "Long contrast" },
@@ -152,6 +164,7 @@
       { hindi: "शाम को सरकार ने शहर में नई स्कीम शुरू की", roman: "Shaam ko sarkar ne shahar mein nayi scheme shuru ki", tip: "Complex contrast" }
     ];
 
+    // ==================== 20 MODULES ====================
     const modules = [
       { id: 1, title: "Module 1: Pure 'Sa' Sound (स)", type: "single", words: [0,1,2,3,4] },
       { id: 2, title: "Module 2: Pure 'Sha' Sound (श)", type: "single", words: [10,11,12,13,14] },
@@ -175,7 +188,7 @@
       { id: 20, title: "Module 20: Final Mastery Challenge", type: "single", words: [20,22,24,26,28,29] }
     ];
 
-    // ==================== TIMER & FUNCTIONS ====================
+    // ==================== TIMER ====================
     function startSessionTimer() {
       if (sessionStartTime === null) {
         sessionStartTime = Date.now();
