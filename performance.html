@@ -35,10 +35,6 @@
     tr:hover {
       background: #334155;
     }
-    .time-cell {
-      font-size: 13px;
-      line-height: 1.5;
-    }
     button {
       background: #3b82f6;
       color: white;
@@ -47,6 +43,10 @@
       border-radius: 8px;
       cursor: pointer;
       margin-bottom: 20px;
+    }
+    .time-cell {
+      font-size: 13px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -75,6 +75,31 @@
   <script>
     const API_URL = "https://drona-lingua-backend.onrender.com";
 
+    // Function to format last practiced time nicely
+    function formatLastPracticed(dateString) {
+      if (!dateString) return "Never";
+
+      const date = new Date(dateString);
+      const now = new Date();
+
+      const isToday = date.toDateString() === now.toDateString();
+      const isYesterday = new Date(now - 86400000).toDateString() === date.toDateString();
+
+      const time = date.toLocaleTimeString([], { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+
+      if (isToday) {
+        return `Today at ${time}`;
+      } else if (isYesterday) {
+        return `Yesterday at ${time}`;
+      } else {
+        return date.toLocaleDateString() + " at " + time;
+      }
+    }
+
     async function loadPerformance() {
       const tbody = document.querySelector("#performanceTable tbody");
       tbody.innerHTML = "<tr><td colspan='6'>Loading...</td></tr>";
@@ -92,9 +117,6 @@
 
         users.forEach(user => {
           const completed = user.completed_modules ? user.completed_modules.length : 0;
-          const lastPracticed = user.last_practiced 
-            ? new Date(user.last_practiced).toLocaleString() 
-            : "Never";
 
           // Format time spent
           let timeHtml = "No data";
@@ -113,6 +135,8 @@
             timeHtml += `<strong>Total: ${totalMin} min</strong>`;
           }
 
+          const lastPracticed = formatLastPracticed(user.last_practiced);
+
           const row = `
             <tr>
               <td><strong>${user.username}</strong></td>
@@ -128,11 +152,11 @@
 
       } catch (error) {
         console.error("Error loading performance:", error);
-        tbody.innerHTML = `<tr><td colspan='6' style='color: red;'>Failed to load data. Check if backend is running.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan='6' style='color: red;'>Failed to load data</td></tr>`;
       }
     }
 
-    // Load data when page opens
+    // Load when page opens
     loadPerformance();
   </script>
 </body>
