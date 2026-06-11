@@ -12,18 +12,23 @@ let xp = 0;
 let level = 1;
 let completedModules = [];
 
-// ==================== WORDBANK ====================
+// ==================== WORDBANK (More English Words Added) ====================
 const wordBank = [
-  { hindi: "سही", roman: "Sahi", tip: "Soft dental 'Sa'" },
+  // Hindi SA
+  { hindi: "सही", roman: "Sahi", tip: "Soft dental 'Sa'" },
   { hindi: "सरकार", roman: "Sarkar", tip: "Soft 'Sa'" },
   { hindi: "सामान", roman: "Samaan", tip: "Soft 'Sa'" },
   { hindi: "सड़क", roman: "Sadak", tip: "Soft 'Sa'" },
   { hindi: "सफल", roman: "Safal", tip: "Soft 'Sa'" },
+
+  // Hindi SHA
   { hindi: "शहर", roman: "Shahar", tip: "Strong 'Sha'" },
   { hindi: "शेर", roman: "Sher", tip: "Strong 'Sha'" },
   { hindi: "शाम", roman: "Shaam", tip: "Strong 'Sha'" },
   { hindi: "शुरू", roman: "Shuru", tip: "Strong 'Sha'" },
   { hindi: "शक्ति", roman: "Shakti", tip: "Strong 'Sha'" },
+
+  // English Words (Common UP Mistakes)
   { hindi: "Station", roman: "Station", tip: "S-TAY-shun" },
   { hindi: "Attention", roman: "Attention", tip: "uh-TEN-shun" },
   { hindi: "Special", roman: "Special", tip: "SPE-shul" },
@@ -34,6 +39,22 @@ const wordBank = [
   { hindi: "Mention", roman: "Mention", tip: "MEN-shun" },
   { hindi: "Sugar", roman: "Sugar", tip: "SHOO-gar" },
   { hindi: "Sure", roman: "Sure", tip: "SHOOR" },
+  { hindi: "Shirt", roman: "Shirt", tip: "Strong 'Sh'" },
+  { hindi: "Shoes", roman: "Shoes", tip: "Strong 'Sh'" },
+  { hindi: "Ship", roman: "Ship", tip: "Strong 'Sh'" },
+  { hindi: "Shop", roman: "Shop", tip: "Strong 'Sh'" },
+  { hindi: "Shell", roman: "Shell", tip: "Strong 'Sh'" },
+  { hindi: "Shine", roman: "Shine", tip: "Strong 'Sh'" },
+  { hindi: "Short", roman: "Short", tip: "Strong 'Sh'" },
+  { hindi: "Show", roman: "Show", tip: "Strong 'Sh'" },
+  { hindi: "Shape", roman: "Shape", tip: "Strong 'Sh'" },
+  { hindi: "Share", roman: "Share", tip: "Strong 'Sh'" },
+  { hindi: "Shock", roman: "Shock", tip: "Strong 'Sh'" },
+  { hindi: "Should", roman: "Should", tip: "Strong 'Sh'" },
+  { hindi: "Shout", roman: "Shout", tip: "Strong 'Sh'" },
+  { hindi: "Shower", roman: "Shower", tip: "Strong 'Sh'" },
+
+  // Sentences
   { hindi: "Go to the station on time", roman: "Go to the station on time", tip: "Real sentence" },
   { hindi: "Pay attention in class", roman: "Pay attention in class", tip: "School context" },
   { hindi: "शहर में सही सामान है", roman: "Shahar mein sahi samaan hai", tip: "Mixed practice" }
@@ -46,21 +67,21 @@ const modules = [
   { id: 3, title: "Module 3: Minimal Pairs Drill", type: "minimal_pairs", pairs: [[0,5], [1,6], [2,7]] },
   { id: 4, title: "Module 4: English - Station & Attention", type: "single", words: [10,11] },
   { id: 5, title: "Module 5: English - Special, Sugar, Sure", type: "single", words: [12,18,19] },
-  { id: 6, title: "Module 6: More English Words", type: "single", words: [13,14,15,16,17] },
-  { id: 7, title: "Module 7: Real Life Sentences", type: "single", words: [20,21,22] },
+  { id: 6, title: "Module 6: More English Words", type: "single", words: [13,14,15,16,17,20,21] },
+  { id: 7, title: "Module 7: Real Life Sentences", type: "single", words: [25,26,27] },
   { id: 8, title: "Module 8: Minimal Pairs + English", type: "minimal_pairs", pairs: [[0,5], [10,11]] },
   { id: 9, title: "Module 9: Sales Context", type: "single", words: [0,1,4,5] },
   { id: 10, title: "Module 10: Mixed Review", type: "single", words: [0,5,10,11,12] },
-  { id: 11, title: "Module 11: Long Sentences", type: "single", words: [20,21,22] },
+  { id: 11, title: "Module 11: Long Sentences", type: "single", words: [25,26,27] },
   { id: 12, title: "Module 12: Speed Round", type: "single", words: [0,5,10,11,12] },
   { id: 13, title: "Module 13: Hindi Heavy Review", type: "single", words: [0,1,2,3,4] },
-  { id: 14, title: "Module 14: English Heavy Review", type: "single", words: [10,11,12,13,14,15] },
+  { id: 14, title: "Module 14: English Heavy Review", type: "single", words: [10,11,12,13,14,15,16,17] },
   { id: 15, title: "Module 15: Minimal Pairs Challenge", type: "minimal_pairs", pairs: [[0,5], [10,11], [18,19]] },
-  { id: 16, title: "Module 16: Complex Sentences", type: "single", words: [20,21,22] },
+  { id: 16, title: "Module 16: Complex Sentences", type: "single", words: [25,26,27] },
   { id: 17, title: "Module 17: High Speed Mixed", type: "single", words: [0,5,10,11,12] },
-  { id: 18, title: "Module 18: Long Practice", type: "single", words: [20,21,22] },
+  { id: 18, title: "Module 18: Long Practice", type: "single", words: [25,26,27] },
   { id: 19, title: "Module 19: Full Review Round", type: "single", words: [0,5,10,11,12,18] },
-  { id: 20, title: "Module 20: Final Mastery Challenge", type: "single", words: [10,11,12,13,14,15,18] }
+  { id: 20, title: "Module 20: Final Mastery Challenge", type: "single", words: [10,11,12,13,14,15,16,17,18] }
 ];
 
 // ==================== ENTER KEY ====================
@@ -86,7 +107,7 @@ function startSessionTimer() {
   }, 1000);
 }
 
-// ==================== TONGUE POSITION (Improved) ====================
+// ==================== TONGUE POSITION ====================
 function showTonguePosition(wordObj) {
   const box = document.getElementById("tonguePositionBox");
   const imageBox = document.getElementById("tongueImage");
@@ -96,20 +117,18 @@ function showTonguePosition(wordObj) {
   box.style.display = "block";
   const text = (wordObj.hindi + " " + wordObj.roman).toLowerCase();
 
-  if (text.includes("س") || text.includes("sa")) {
+  if (text.includes("स") || text.includes("sa")) {
     imageBox.innerHTML = "👅<br><strong>Dental</strong>";
     title.textContent = "Sa Sound (स)";
     tip.textContent = "Touch the tip of your tongue lightly behind your upper front teeth.";
-  } 
-  else if (text.includes("श") || text.includes("sha") || text.includes("sh")) {
+  } else if (text.includes("श") || text.includes("sha") || text.includes("sh")) {
     imageBox.innerHTML = "👅<br><strong>Palatal</strong>";
     title.textContent = "Sha Sound (श)";
     tip.textContent = "Raise the front of your tongue towards the roof of your mouth.";
-  } 
-  else {
+  } else {
     imageBox.innerHTML = "👅";
     title.textContent = "Tongue Position";
-    tip.textContent = "Focus on where your tongue touches for this sound.";
+    tip.textContent = "Focus on where your tongue touches.";
   }
 }
 
@@ -139,7 +158,7 @@ function startModule(module) {
   }
 }
 
-// ==================== FINISH MODULE ====================
+// ==================== FINISH MODULE (Fixed) ====================
 function finishModule() {
   const endTime = Date.now();
   const timeTakenSeconds = Math.floor((endTime - moduleStartTime) / 1000);
@@ -148,7 +167,10 @@ function finishModule() {
     fetch(`${API_URL}/api/complete_module/${currentUser}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ module_id: currentModuleData.id, time_taken: timeTakenSeconds })
+      body: JSON.stringify({
+        module_id: currentModuleData.id,
+        time_taken: timeTakenSeconds
+      })
     })
     .then(res => res.json())
     .then(data => {
@@ -157,6 +179,7 @@ function finishModule() {
         level = data.level;
         completedModules = data.completed_modules || [];
       }
+      // Always refresh UI
       document.getElementById("practiceScreen").style.display = "none";
       document.getElementById("modulesScreen").style.display = "block";
       loadModules();
@@ -176,7 +199,7 @@ function finishModule() {
   }
 }
 
-// ==================== LOAD MODULES ====================
+// ==================== LOAD MODULES (Fixed Logic) ====================
 function loadModules() {
   const container = document.getElementById("modulesList");
   container.innerHTML = "";
@@ -197,7 +220,9 @@ function loadModules() {
       ${isLocked ? '<span style="color:#ef4444">🔒 Locked</span>' : ''}
     `;
 
-    if (!isLocked) div.onclick = () => startModule(mod);
+    if (!isLocked) {
+      div.onclick = () => startModule(mod);
+    }
     container.appendChild(div);
   });
 }
@@ -275,8 +300,11 @@ function nextItem() {
   const total = isMinimalPairs ? currentModuleData.pairs.length : currentModuleData.words.length;
 
   if (currentIndex < total) {
-    if (isMinimalPairs) loadMinimalPair();
-    else loadWordFromModule();
+    if (isMinimalPairs) {
+      loadMinimalPair();
+    } else {
+      loadWordFromModule();
+    }
   } else {
     finishModule();
   }
