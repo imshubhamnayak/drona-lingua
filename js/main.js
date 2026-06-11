@@ -63,14 +63,12 @@ const modules = [
   { id: 20, title: "Module 20: Final Mastery Challenge", type: "single", words: [10,11,12,13,14,15,18] }
 ];
 
-// ==================== ENTER KEY SUPPORT ====================
+// ==================== ENTER KEY ====================
 function setupEnterKey() {
   const input = document.getElementById("usernameInput");
   if (input) {
     input.addEventListener("keypress", function(e) {
-      if (e.key === "Enter") {
-        registerUser();
-      }
+      if (e.key === "Enter") registerUser();
     });
   }
 }
@@ -86,6 +84,31 @@ function startSessionTimer() {
     document.getElementById("timer").textContent = 
       `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
   }, 1000);
+}
+
+// ==================== TONGUE POSITION ====================
+function showTonguePosition(wordObj) {
+  const box = document.getElementById("tonguePositionBox");
+  const imageBox = document.getElementById("tongueImage");
+  const title = document.getElementById("tongueTitle");
+  const tip = document.getElementById("tongueTip");
+
+  box.style.display = "block";
+  const hindi = wordObj.hindi.toLowerCase();
+
+  if (hindi.includes("स") || hindi.includes("sa")) {
+    imageBox.innerHTML = "👅<br>Upper Teeth";
+    title.textContent = "Dental Sound (स)";
+    tip.textContent = "Touch the tip of your tongue to your upper front teeth.";
+  } else if (hindi.includes("श") || hindi.includes("sha") || hindi.includes("sh")) {
+    imageBox.innerHTML = "👅<br>Roof of Mouth";
+    title.textContent = "Palatal Sound (श)";
+    tip.textContent = "Lift your tongue towards the roof of your mouth.";
+  } else {
+    imageBox.innerHTML = "👅";
+    title.textContent = "Tongue Position";
+    tip.textContent = "Focus on where your tongue touches.";
+  }
 }
 
 // ==================== START MODULE ====================
@@ -123,10 +146,7 @@ function finishModule() {
     fetch(`${API_URL}/api/complete_module/${currentUser}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        module_id: currentModuleData.id,
-        time_taken: timeTakenSeconds
-      })
+      body: JSON.stringify({ module_id: currentModuleData.id, time_taken: timeTakenSeconds })
     })
     .then(res => res.json())
     .then(data => {
@@ -175,9 +195,7 @@ function loadModules() {
       ${isLocked ? '<span style="color:#ef4444">🔒 Locked</span>' : ''}
     `;
 
-    if (!isLocked) {
-      div.onclick = () => startModule(mod);
-    }
+    if (!isLocked) div.onclick = () => startModule(mod);
     container.appendChild(div);
   });
 }
@@ -208,6 +226,7 @@ function loadWordFromModule() {
   const q = wordBank[wordIndex];
   document.getElementById("currentWord").textContent = q.hindi;
   document.getElementById("roman").textContent = `${q.roman} — ${q.tip}`;
+  showTonguePosition(q);
 }
 
 function loadMinimalPair() {
@@ -218,6 +237,7 @@ function loadMinimalPair() {
   document.getElementById("pairRoman1").textContent = w1.roman;
   document.getElementById("pairWord2").textContent = w2.hindi;
   document.getElementById("pairRoman2").textContent = w2.roman;
+  showTonguePosition(w1);
 }
 
 // ==================== LISTEN ====================
@@ -254,11 +274,8 @@ function nextItem() {
   const total = isMinimalPairs ? currentModuleData.pairs.length : currentModuleData.words.length;
 
   if (currentIndex < total) {
-    if (isMinimalPairs) {
-      loadMinimalPair();
-    } else {
-      loadWordFromModule();
-    }
+    if (isMinimalPairs) loadMinimalPair();
+    else loadWordFromModule();
   } else {
     finishModule();
   }
