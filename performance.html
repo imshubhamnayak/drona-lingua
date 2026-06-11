@@ -2,37 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Performance Dashboard • Drona Lingua</title>
   <style>
-    body { font-family: 'Inter', system-ui, sans-serif; background: #0a0f1c; color: #e2e8f0; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; background: #1e2937; border-radius: 12px; overflow: hidden; }
-    th, td { padding: 14px; text-align: left; border-bottom: 1px solid #334155; }
-    th { background: #111827; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0f1c;
+      color: #e2e8f0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1e2937;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+    th {
+      background: #111827;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: #334155;
+    }
+    .time-cell {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
+
   <h1>📊 Drona Lingua - Performance Dashboard</h1>
-  <button onclick="loadPerformance()">Refresh</button>
-  <br><br>
-  <table id="perfTable">
+  
+  <button onclick="loadPerformance()">Refresh Data</button>
+
+  <table id="performanceTable">
     <thead>
       <tr>
         <th>Username</th>
         <th>Level</th>
         <th>XP</th>
         <th>Modules Completed</th>
+        <th>Time Spent</th>
         <th>Last Practiced</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      <!-- Data populated by JavaScript -->
+    </tbody>
   </table>
 
   <script>
     const API_URL = "https://drona-lingua-backend.onrender.com";
 
     async function loadPerformance() {
-      const tbody = document.querySelector("#perfTable tbody");
-      tbody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
+      const tbody = document.querySelector("#performanceTable tbody");
+      tbody.innerHTML = "<tr><td colspan='6'>Loading...</td></tr>";
 
       try {
         const res = await fetch(`${API_URL}/api/users`);
@@ -41,13 +86,32 @@
         tbody.innerHTML = "";
 
         if (users.length === 0) {
-          tbody.innerHTML = "<tr><td colspan='5'>No users found yet.</td></tr>";
+          tbody.innerHTML = "<tr><td colspan='6'>No users found yet.</td></tr>";
           return;
         }
 
         users.forEach(user => {
           const completed = user.completed_modules ? user.completed_modules.length : 0;
-          const last = user.last_practiced ? new Date(user.last_practiced).toLocaleString() : "Never";
+          const lastPracticed = user.last_practiced 
+            ? new Date(user.last_practiced).toLocaleString() 
+            : "Never";
+
+          // Format time spent
+          let timeHtml = "No data";
+          if (user.time_spent && Object.keys(user.time_spent).length > 0) {
+            timeHtml = "";
+            let totalSeconds = 0;
+
+            Object.keys(user.time_spent).forEach(modId => {
+              const secs = user.time_spent[modId];
+              totalSeconds += secs;
+              const min = Math.floor(secs / 60);
+              timeHtml += `M${modId}: ${min}m<br>`;
+            });
+
+            const totalMin = Math.floor(totalSeconds / 60);
+            timeHtml += `<strong>Total: ${totalMin} min</strong>`;
+          }
 
           const row = `
             <tr>
@@ -55,16 +119,20 @@
               <td>Level ${user.level}</td>
               <td>${user.xp} XP</td>
               <td>${completed} / 20</td>
-              <td>${last}</td>
+              <td class="time-cell">${timeHtml}</td>
+              <td>${lastPracticed}</td>
             </tr>
           `;
           tbody.innerHTML += row;
         });
-      } catch (err) {
-        tbody.innerHTML = "<tr><td colspan='5' style='color:red'>Failed to load data. Check backend.</td></tr>";
+
+      } catch (error) {
+        console.error("Error loading performance:", error);
+        tbody.innerHTML = `<tr><td colspan='6' style='color: red;'>Failed to load data. Check if backend is running.</td></tr>`;
       }
     }
 
+    // Load data when page opens
     loadPerformance();
   </script>
 </body>
