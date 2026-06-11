@@ -36,14 +36,8 @@ body {
   cursor: pointer;
 }
 
-.module-card.locked {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.module-card.completed {
-  border: 2px solid #22c55e;
-}
+.module-card.locked { opacity: 0.5; cursor: not-allowed; }
+.module-card.completed { border: 2px solid #22c55e; }
 
 .word {
   font-size: 42px;
@@ -99,6 +93,11 @@ button {
   gap: 6px;
 }
 
-.dashboard-btn:hover {
-  background: #475569;
+.dashboard-btn:hover { background: #475569; }
+
+.tongue-box {
+  border: 1px solid #475569;
+  padding: 16px;
+  background: #334155;
+  border-radius: 12px;
 }
