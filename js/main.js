@@ -14,7 +14,7 @@ let completedModules = [];
 
 // ==================== WORDBANK ====================
 const wordBank = [
-  { hindi: "सही", roman: "Sahi", tip: "Soft dental 'Sa'" },
+  { hindi: "سही", roman: "Sahi", tip: "Soft dental 'Sa'" },
   { hindi: "सरकार", roman: "Sarkar", tip: "Soft 'Sa'" },
   { hindi: "सामान", roman: "Samaan", tip: "Soft 'Sa'" },
   { hindi: "सड़क", roman: "Sadak", tip: "Soft 'Sa'" },
@@ -86,7 +86,7 @@ function startSessionTimer() {
   }, 1000);
 }
 
-// ==================== TONGUE POSITION ====================
+// ==================== TONGUE POSITION (Improved) ====================
 function showTonguePosition(wordObj) {
   const box = document.getElementById("tonguePositionBox");
   const imageBox = document.getElementById("tongueImage");
@@ -94,20 +94,22 @@ function showTonguePosition(wordObj) {
   const tip = document.getElementById("tongueTip");
 
   box.style.display = "block";
-  const hindi = wordObj.hindi.toLowerCase();
+  const text = (wordObj.hindi + " " + wordObj.roman).toLowerCase();
 
-  if (hindi.includes("स") || hindi.includes("sa")) {
-    imageBox.innerHTML = "👅<br>Upper Teeth";
-    title.textContent = "Dental Sound (स)";
-    tip.textContent = "Touch the tip of your tongue to your upper front teeth.";
-  } else if (hindi.includes("श") || hindi.includes("sha") || hindi.includes("sh")) {
-    imageBox.innerHTML = "👅<br>Roof of Mouth";
-    title.textContent = "Palatal Sound (श)";
-    tip.textContent = "Lift your tongue towards the roof of your mouth.";
-  } else {
+  if (text.includes("س") || text.includes("sa")) {
+    imageBox.innerHTML = "👅<br><strong>Dental</strong>";
+    title.textContent = "Sa Sound (स)";
+    tip.textContent = "Touch the tip of your tongue lightly behind your upper front teeth.";
+  } 
+  else if (text.includes("श") || text.includes("sha") || text.includes("sh")) {
+    imageBox.innerHTML = "👅<br><strong>Palatal</strong>";
+    title.textContent = "Sha Sound (श)";
+    tip.textContent = "Raise the front of your tongue towards the roof of your mouth.";
+  } 
+  else {
     imageBox.innerHTML = "👅";
     title.textContent = "Tongue Position";
-    tip.textContent = "Focus on where your tongue touches.";
+    tip.textContent = "Focus on where your tongue touches for this sound.";
   }
 }
 
@@ -232,11 +234,10 @@ function loadWordFromModule() {
 function loadMinimalPair() {
   const pair = currentModuleData.pairs[currentIndex];
   const w1 = wordBank[pair[0]];
-  const w2 = wordBank[pair[1]];
   document.getElementById("pairWord1").textContent = w1.hindi;
   document.getElementById("pairRoman1").textContent = w1.roman;
-  document.getElementById("pairWord2").textContent = w2.hindi;
-  document.getElementById("pairRoman2").textContent = w2.roman;
+  document.getElementById("pairWord2").textContent = wordBank[pair[1]].hindi;
+  document.getElementById("pairRoman2").textContent = wordBank[pair[1]].roman;
   showTonguePosition(w1);
 }
 
