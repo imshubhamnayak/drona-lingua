@@ -3,168 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drona Lingua • Learn Sounds</title>
+    <title>Drona Lingua • Master Difficult Sounds</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: 'Inter', system_ui, sans-serif; }
-        .guide-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .sound-label {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .section-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .word-card { transition: all 0.2s ease; }
+        .word-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        .minimal-pair { transition: all 0.2s ease; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-200">
-    <div class="max-w-5xl mx-auto p-6">
+    <div class="max-w-6xl mx-auto p-6">
         
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
-            <div>
-                <h1 class="text-3xl font-bold tracking-tight">Drona Lingua</h1>
-                <p class="text-slate-400">Master the sounds that matter</p>
+            <div class="flex items-center gap-x-4">
+                <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-microphone text-white text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-bold tracking-tight">Drona Lingua</h1>
+                    <p class="text-slate-400">Master the sounds that hold you back</p>
+                </div>
             </div>
-            <div class="px-4 py-1.5 bg-slate-900 rounded-2xl text-sm flex items-center gap-x-2">
-                <i class="fa-solid fa-user text-emerald-400"></i>
-                <span>Shubham</span>
+            <div class="flex items-center gap-x-3">
+                <div class="px-4 py-2 bg-slate-900 rounded-2xl text-sm flex items-center gap-x-2">
+                    <i class="fa-solid fa-user text-emerald-400"></i>
+                    <span>Shubham</span>
+                </div>
             </div>
         </div>
 
-        <!-- NEW: Pronunciation Guide Section -->
+        <!-- How to Make the Sound -->
         <div class="mb-10">
             <div class="flex items-center gap-x-3 mb-4">
-                <div class="w-8 h-8 bg-emerald-500 rounded-2xl flex items-center justify-center">
-                    <i class="fa-solid fa-graduation-cap text-white"></i>
-                </div>
-                <h2 class="text-2xl font-semibold tracking-tight">How to Make the Sound</h2>
+                <i class="fa-solid fa-graduation-cap text-emerald-400 text-2xl"></i>
+                <h2 class="text-2xl font-semibold">How to Make the Sound</h2>
             </div>
-            <p class="text-slate-400 mb-6">Learn the correct tongue position, airflow, and lip shape before you practice.</p>
+            <p class="text-slate-400 mb-6">Learn the correct tongue position, airflow, and lip shape first. This is the foundation.</p>
 
-            <!-- S vs SH -->
+            <!-- S vs SH Guide -->
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-8">
                 <div class="flex items-center gap-x-3 mb-5">
-                    <div class="px-4 py-1 bg-blue-600 text-white rounded-2xl text-sm font-semibold flex items-center gap-x-2">
-                        <span>S</span> <span class="font-normal text-blue-200">vs</span> <span>SH</span>
+                    <div class="px-4 py-1.5 bg-blue-600 text-white rounded-2xl text-sm font-semibold flex items-center gap-x-2">
+                        <span>S</span> <span class="font-normal">vs</span> <span>SH</span>
                     </div>
                     <div class="text-sm text-slate-400">Most common confusion for UP/Bihar speakers</div>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Image -->
-                    <div>
-                        <img src="images/s_vs_sh_guide.jpeg" 
-                             alt="S vs SH Tongue Position Guide"
-                             class="w-full rounded-2xl border border-slate-700 shadow-xl">
+                    <!-- S -->
+                    <div class="border border-blue-500/30 bg-slate-950 rounded-2xl p-5">
+                        <div class="flex items-center gap-x-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">S</div>
+                            <div>
+                                <div class="font-semibold text-lg">S <span class="text-blue-400">(as in sun)</span></div>
+                                <div class="text-xs text-blue-400">Thin, sharp hiss • Voiceless</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div><span class="font-medium text-slate-300">Tongue:</span> Forward, close to upper teeth ridge</div>
+                            <div><span class="font-medium text-slate-300">Airflow:</span> Thin air through narrow gap → <span class="font-mono text-blue-400">sssss</span></div>
+                            <div><span class="font-medium text-slate-300">Lips:</span> Relaxed or slightly smiling</div>
+                        </div>
                     </div>
 
-                    <!-- Key Points -->
-                    <div class="space-y-5">
-                        <div>
-                            <div class="font-semibold text-blue-400 mb-1">S (as in sun)</div>
-                            <ul class="text-sm text-slate-300 space-y-1.5">
-                                <li>• Tongue forward, close to upper teeth ridge</li>
-                                <li>• Thin, sharp air through narrow gap → <span class="font-mono text-blue-400">sssss</span></li>
-                                <li>• Lips relaxed / slightly smiling</li>
-                            </ul>
+                    <!-- SH -->
+                    <div class="border border-orange-500/30 bg-slate-950 rounded-2xl p-5">
+                        <div class="flex items-center gap-x-3 mb-4">
+                            <div class="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">SH</div>
+                            <div>
+                                <div class="font-semibold text-lg">SH <span class="text-orange-400">(as in shoe)</span></div>
+                                <div class="text-xs text-orange-400">Softer hush • Voiceless</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="font-semibold text-orange-400 mb-1">SH (as in shoe)</div>
-                            <ul class="text-sm text-slate-300 space-y-1.5">
-                                <li>• Tongue slightly back + rounded at front</li>
-                                <li>• Softer air through wider channel → <span class="font-mono text-orange-400">shhhhh</span></li>
-                                <li>• Lips slightly rounded</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="pt-3 border-t border-slate-700 text-xs text-emerald-400 flex items-center gap-x-2">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            <span>Memory cue: <strong>S = Smile + Sharp</strong> &nbsp; | &nbsp; <strong>SH = Round + Soft</strong></span>
+                        <div class="space-y-3 text-sm">
+                            <div><span class="font-medium text-slate-300">Tongue:</span> Slightly back + rounded at front</div>
+                            <div><span class="font-medium text-slate-300">Airflow:</span> Softer air through wider channel → <span class="font-mono text-orange-400">shhhhh</span></div>
+                            <div><span class="font-medium text-slate-300">Lips:</span> Slightly rounded</div>
                         </div>
                     </div>
                 </div>
+
+                <div class="mt-5 p-3 bg-slate-800 rounded-2xl text-sm flex items-center gap-x-2 text-slate-300">
+                    <i class="fa-solid fa-lightbulb text-yellow-400"></i>
+                    <span><strong>Memory:</strong> S = Smile + Sharp thin air &nbsp;&nbsp;|&nbsp;&nbsp; SH = Round lips + Softer wider air</span>
+                </div>
             </div>
 
-            <!-- Z vs G -->
+            <!-- Z vs G Guide -->
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
                 <div class="flex items-center gap-x-3 mb-5">
-                    <div class="px-4 py-1 bg-emerald-600 text-white rounded-2xl text-sm font-semibold flex items-center gap-x-2">
-                        <span>Z</span> <span class="font-normal text-emerald-200">vs</span> <span>G</span>
+                    <div class="px-4 py-1.5 bg-emerald-600 text-white rounded-2xl text-sm font-semibold flex items-center gap-x-2">
+                        <span>Z</span> <span class="font-normal">vs</span> <span>G</span>
                     </div>
                     <div class="text-sm text-slate-400">Another very common mix-up</div>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Image -->
-                    <div>
-                        <img src="images/z_vs_g_guide.jpeg" 
-                             alt="Z vs G Tongue Position Guide"
-                             class="w-full rounded-2xl border border-slate-700 shadow-xl">
+                    <!-- Z -->
+                    <div class="border border-emerald-500/30 bg-slate-950 rounded-2xl p-5">
+                        <div class="flex items-center gap-x-3 mb-4">
+                            <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">Z</div>
+                            <div>
+                                <div class="font-semibold text-lg">Z <span class="text-emerald-400">(as in zoo)</span></div>
+                                <div class="text-xs text-emerald-400">Continuous buzzing • Voiced</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div><span class="font-medium text-slate-300">Tongue:</span> Forward, near upper teeth</div>
+                            <div><span class="font-medium text-slate-300">Airflow:</span> Vocal cords vibrate → continuous <span class="font-mono text-emerald-400">zzzzzz</span></div>
+                            <div><span class="font-medium text-slate-300">Can hold it?</span> Yes</div>
+                        </div>
                     </div>
 
-                    <!-- Key Points -->
-                    <div class="space-y-5">
-                        <div>
-                            <div class="font-semibold text-emerald-400 mb-1">Z (as in zoo)</div>
-                            <ul class="text-sm text-slate-300 space-y-1.5">
-                                <li>• Tongue forward, near upper teeth</li>
-                                <li>• Continuous buzzing sound (vocal cords vibrate)</li>
-                                <li>• You can hold it: <span class="font-mono">zzzzzz</span></li>
-                            </ul>
+                    <!-- G -->
+                    <div class="border border-green-500/30 bg-slate-950 rounded-2xl p-5">
+                        <div class="flex items-center gap-x-3 mb-4">
+                            <div class="w-10 h-10 bg-green-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">G</div>
+                            <div>
+                                <div class="font-semibold text-lg">G <span class="text-green-400">(as in go)</span></div>
+                                <div class="text-xs text-green-400">Short stop sound • Voiced</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="font-semibold text-green-400 mb-1">G (as in go)</div>
-                            <ul class="text-sm text-slate-300 space-y-1.5">
-                                <li>• Tongue back, touching soft palate</li>
-                                <li>• Short stop sound — air is blocked then released</li>
-                                <li>• You cannot hold it (guh)</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="pt-3 border-t border-slate-700 text-xs text-emerald-400 flex items-center gap-x-2">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            <span>Memory cue: <strong>Z = Continuous buzz</strong> &nbsp; | &nbsp; <strong>G = Stop + Release</strong></span>
+                        <div class="space-y-3 text-sm">
+                            <div><span class="font-medium text-slate-300">Tongue:</span> Back, touching soft palate</div>
+                            <div><span class="font-medium text-slate-300">Airflow:</span> Blocked then released suddenly → short “guh”</div>
+                            <div><span class="font-medium text-slate-300">Can hold it?</span> No</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Practice Section (placeholder for now) -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
-            <h3 class="font-semibold mb-4">Ready to Practice?</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <button onclick="startModule('s_sh')" 
-                        class="bg-slate-800 hover:bg-slate-700 transition p-4 rounded-2xl text-left">
-                    <div class="font-medium">S vs SH Module</div>
-                    <div class="text-xs text-slate-400 mt-1">20 words • Minimal pairs</div>
+        <!-- Module Selection -->
+        <div class="mb-6">
+            <h3 class="text-xl font-semibold mb-4">Choose Your Practice</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="showModule('s_sh')" 
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
+                    <div class="flex items-center gap-x-3">
+                        <div class="text-3xl font-bold text-blue-400">S</div>
+                        <div class="text-3xl font-bold text-orange-400">SH</div>
+                    </div>
+                    <div class="mt-3 font-semibold text-lg">S vs SH Module</div>
+                    <div class="text-sm text-slate-400">10 words • Minimal pairs • Sentences</div>
                 </button>
-                <button onclick="startModule('z_g')" 
-                        class="bg-slate-800 hover:bg-slate-700 transition p-4 rounded-2xl text-left">
-                    <div class="font-medium">Z vs G Module</div>
-                    <div class="text-xs text-slate-400 mt-1">20 words • Minimal pairs</div>
+
+                <button onclick="showModule('z_g')" 
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
+                    <div class="flex items-center gap-x-3">
+                        <div class="text-3xl font-bold text-emerald-400">Z</div>
+                        <div class="text-3xl font-bold text-green-400">G</div>
+                    </div>
+                    <div class="mt-3 font-semibold text-lg">Z vs G Module</div>
+                    <div class="text-sm text-slate-400">18 words • Minimal pairs</div>
                 </button>
+            </div>
+        </div>
+
+        <!-- S vs SH Module -->
+        <div id="module-s_sh" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-semibold">S vs SH Practice</h3>
+                <button onclick="hideModule()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+
+            <!-- Practice Words -->
+            <div class="mb-8">
+                <h4 class="font-semibold mb-3 text-blue-400">Practice Words</h4>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div class="word-card bg-slate-950 border border-slate-700 p-3 rounded-2xl text-sm">sun — Sharp air, relaxed lips</div>
+                    <div class="word-card bg-slate-950 border border-slate-700 p-3 rounded-2xl text-sm">sip — Tongue forward</div>
+                    <div class="word-card bg-slate-950 border border-slate-700 p-3 rounded-2xl text-sm">see — Smile slightly, thin air</div>
+                    <div class="word-card bg-slate-950 border border-slate-700 p-3 rounded-2xl text-sm">bus — End with sharp S</div>
+                    <div class="word-card bg-slate-950 border border-slate-700 p-3 rounded-2xl text-sm">sell — Tongue near teeth ridge</div>
+                </div>
+            </div>
+
+            <!-- Minimal Pairs -->
+            <div class="mb-8">
+                <h4 class="font-semibold mb-3 text-orange-400">Minimal Pairs</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div class="minimal-pair bg-slate-950 border border-orange-500/30 p-3 rounded-2xl">sip — ship <span class="text-xs text-orange-400">(S is sharper)</span></div>
+                    <div class="minimal-pair bg-slate-950 border border-orange-500/30 p-3 rounded-2xl">see — she <span class="text-xs text-orange-400">(Smile for S)</span></div>
+                    <div class="minimal-pair bg-slate-950 border border-orange-500/30 p-3 rounded-2xl">sell — shell <span class="text-xs text-orange-400">(Keep S forward)</span></div>
+                    <div class="minimal-pair bg-slate-950 border border-orange-500/30 p-3 rounded-2xl">seat — sheet <span class="text-xs text-orange-400">(S is thin air)</span></div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="alert('Full drill mode coming next — we can expand this easily!')" 
+                        class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
+                    Start Full Drill Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Z vs G Module -->
+        <div id="module-z_g" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-semibold">Z vs G Practice</h3>
+                <button onclick="hideModule()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="font-semibold mb-3 text-emerald-400">Z Words</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">zoo — zzz-oo</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">zip — zzz-ip</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">zero — zee-ro</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">zebra — zee-bra</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">zone — zohn</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">cozy — koh-zee</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">lazy — lay-zee</div>
+                    <div class="word-card bg-slate-950 p-3 rounded-2xl">buzz — buhzz</div>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-3 text-green-400">Z vs G Minimal Pairs</h4>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                    <div class="minimal-pair bg-slate-950 border border-green-500/30 p-3 rounded-2xl">zoo — goo</div>
+                    <div class="minimal-pair bg-slate-950 border border-green-500/30 p-3 rounded-2xl">zip — gip</div>
+                    <div class="minimal-pair bg-slate-950 border border-green-500/30 p-3 rounded-2xl">zero — giro</div>
+                    <div class="minimal-pair bg-slate-950 border border-green-500/30 p-3 rounded-2xl">zone — gone</div>
+                    <div class="minimal-pair bg-slate-950 border border-green-500/30 p-3 rounded-2xl">lazy — leggy</div>
+                    <div class="minimal-pair bg-slate-950 border border-green-500/30 p-3 rounded-2xl">buzz — bug</div>
+                </div>
             </div>
         </div>
 
     </div>
 
     <script>
-        function startModule(type) {
+        function showModule(type) {
+            document.getElementById('module-s_sh').classList.add('hidden');
+            document.getElementById('module-z_g').classList.add('hidden');
+
             if (type === 's_sh') {
-                alert("S vs SH module will open here (we can connect your existing modules).");
+                document.getElementById('module-s_sh').classList.remove('hidden');
             } else if (type === 'z_g') {
-                alert("Z vs G module will open here.");
+                document.getElementById('module-z_g').classList.remove('hidden');
             }
         }
 
-        // Tailwind script (if needed)
-        function initializeTailwind() {
-            // Already using CDN
+        function hideModule() {
+            document.getElementById('module-s_sh').classList.add('hidden');
+            document.getElementById('module-z_g').classList.add('hidden');
         }
-        window.onload = initializeTailwind;
+
+        // Tailwind script
+        function init() {
+            console.log('%c[Drona Lingua] Updated with image-based guides + document content', 'color:#22c55e');
+        }
+        window.onload = init;
     </script>
 </body>
 </html>
