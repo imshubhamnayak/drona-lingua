@@ -3,18 +3,42 @@ const BACKEND_URL = "https://drona-lingua.onrender.com";
 
 let currentUser = null;
 
+// ==================== WORD DATA ====================
+const sShWords = [
+    { word: "sun", type: "S", cue: "Sharp air, relaxed lips" },
+    { word: "sip", type: "S", cue: "Tongue forward" },
+    { word: "see", type: "S", cue: "Smile slightly, thin air" },
+    { word: "bus", type: "S", cue: "End with sharp S" },
+    { word: "sell", type: "S", cue: "Tongue near teeth ridge" },
+    { word: "shoe", type: "SH", cue: "Rounded lips, soft air" },
+    { word: "ship", type: "SH", cue: "Tongue slightly back" },
+    { word: "she", type: "SH", cue: "Round lips gently" },
+    { word: "fish", type: "SH", cue: "End with soft SH" },
+    { word: "shell", type: "SH", cue: "Tongue back, lips rounded" }
+];
+
+const zgWords = [
+    { word: "zoo", type: "Z", cue: "zzz-oo" },
+    { word: "zip", type: "Z", cue: "zzz-ip" },
+    { word: "zero", type: "Z", cue: "zee-ro" },
+    { word: "zebra", type: "Z", cue: "zee-bra" },
+    { word: "cozy", type: "Z", cue: "koh-zee" },
+    { word: "lazy", type: "Z", cue: "lay-zee" },
+    { word: "buzz", type: "Z", cue: "buhzz" },
+    { word: "go", type: "G", cue: "guh-oh" },
+    { word: "game", type: "G", cue: "gaym" },
+    { word: "good", type: "G", cue: "guud" },
+    { word: "gate", type: "G", cue: "gayt" },
+    { word: "give", type: "G", cue: "giv" }
+];
+
 // ==================== AUTH ====================
 async function loginUser() {
     const usernameInput = document.getElementById('username');
     const username = usernameInput.value.trim();
-
-    if (!username) {
-        alert("Please enter your name");
-        return;
-    }
+    if (!username) return alert("Please enter your name");
 
     try {
-        // Try login first
         let res = await fetch(`${BACKEND_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -22,7 +46,6 @@ async function loginUser() {
         });
 
         if (!res.ok) {
-            // If user doesn't exist, register
             await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -31,18 +54,13 @@ async function loginUser() {
         }
 
         currentUser = username;
-
-        // Hide login, show main content
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('main-content').classList.remove('hidden');
         document.getElementById('user-display').innerText = username;
-
-        // Load progress
         loadUserProgress();
 
     } catch (error) {
-        console.error(error);
-        alert("Failed to connect to backend. Please check your Render URL.");
+        alert("Backend connection failed");
     }
 }
 
@@ -50,95 +68,119 @@ function logout() {
     currentUser = null;
     document.getElementById('main-content').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
-    document.getElementById('username').value = '';
 }
 
 // ==================== PROGRESS ====================
 async function loadUserProgress() {
     if (!currentUser) return;
-
     try {
         const res = await fetch(`${BACKEND_URL}/get-progress/${currentUser}`);
         if (res.ok) {
             const data = await res.json();
-            console.log("User progress loaded:", data);
-            // You can update UI with progress here later
+            console.log("Progress loaded:", data);
         }
-    } catch (err) {
-        console.log("No previous progress found");
-    }
+    } catch (err) {}
 }
 
 async function saveProgress(progress) {
     if (!currentUser) return;
-
     try {
         await fetch(`${BACKEND_URL}/save-progress`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: currentUser,
-                progress: progress
-            })
+            body: JSON.stringify({ username: currentUser, progress })
         });
-        console.log("Progress saved successfully");
-    } catch (err) {
-        console.error("Failed to save progress", err);
-    }
+    } catch (err) {}
 }
 
-// ==================== MODULES ====================
+// ==================== EXERCISE ====================
 function startModule(type) {
     if (type === 's_sh') {
-        showSvsSHModule();
+        showWordList(sShWords, "S vs SH Practice");
     } else if (type === 'z_g') {
-        showZvsGModule();
+        showWordList(zgWords, "Z vs G Practice");
     }
 }
 
-function showSvsSHModule() {
-    const modal = createModal("S vs SH Practice");
+function showWordList(words, title) {
+    const modal = createModal(title);
+    
+    let html = `<div class="p-6">`;
+    html += `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">`;
+
+    words.forEach((item, index) => {
+        html += `
+            <div onclick="practiceWord(${index}, '${item.type}', '${item.word}', '${item.cue}')" 
+                 class="word-card bg-slate-800 hover:bg-slate-700 border border-slate-700 p-4 rounded-2xl cursor-pointer">
+                <div class="font-semibold text-lg">${item.word}</div>
+                <div class="text-xs text-slate-400 mt-1">${item.cue}</div>
+            </div>
+        `;
+    });
+
+    html += `</div></div>`;
+    modal.innerHTML = html;
+}
+
+function practiceWord(index, type, word, cue) {
+    closeModal(); // close word list
+
+    const modal = createModal(`Practice: ${word}`);
+
+    let guideHTML = '';
+
+    if (type === 'S' || type === 'SH') {
+        guideHTML = `
+            <div class="bg-slate-950 border border-slate-700 rounded-2xl p-4 mb-4 text-sm">
+                <div class="font-semibold mb-2 text-blue-400">S vs SH Guide</div>
+                <div><strong>Tongue:</strong> Forward (S) vs Slightly back (SH)</div>
+                <div><strong>Air:</strong> Thin & sharp (S) vs Wider & softer (SH)</div>
+                <div><strong>Lips:</strong> Relaxed (S) vs Slightly rounded (SH)</div>
+            </div>
+        `;
+    } else if (type === 'Z' || type === 'G') {
+        guideHTML = `
+            <div class="bg-slate-950 border border-slate-700 rounded-2xl p-4 mb-4 text-sm">
+                <div class="font-semibold mb-2 text-emerald-400">Z vs G Guide</div>
+                <div><strong>Z:</strong> Continuous buzzing sound (can hold it)</div>
+                <div><strong>G:</strong> Short stop + release sound (cannot hold it)</div>
+            </div>
+        `;
+    }
+
     modal.innerHTML = `
         <div class="p-6">
-            <h3 class="text-xl font-semibold mb-4">S vs SH Practice</h3>
-            <p class="text-slate-400 mb-4">Coming soon: Interactive practice with scoring.</p>
-            
-            <div class="space-y-2">
-                <div class="bg-slate-800 p-3 rounded-2xl">sun — sip — see — sell — seat</div>
-                <div class="bg-slate-800 p-3 rounded-2xl">shoe — ship — she — shell — sheet</div>
+            <div class="text-center mb-6">
+                <div class="text-6xl font-bold tracking-wider mb-2">${word}</div>
+                <div class="text-emerald-400">${cue}</div>
             </div>
 
-            <button onclick="closeModal()" 
-                    class="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
-                Close
-            </button>
+            ${guideHTML}
+
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal()" 
+                        class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-2xl">
+                    Close
+                </button>
+                <button onclick="markAsPracticed('${word}', '${type}')" 
+                        class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
+                    Mark as Practiced
+                </button>
+            </div>
         </div>
     `;
 }
 
-function showZvsGModule() {
-    const modal = createModal("Z vs G Practice");
-    modal.innerHTML = `
-        <div class="p-6">
-            <h3 class="text-xl font-semibold mb-4">Z vs G Practice</h3>
-            <p class="text-slate-400 mb-4">Coming soon: Interactive practice with scoring.</p>
-            
-            <div class="space-y-2">
-                <div class="bg-slate-800 p-3 rounded-2xl">zoo — zip — zero — zebra — zone — cozy — lazy — buzz</div>
-                <div class="bg-slate-800 p-3 rounded-2xl">go — game — good — gate — give — grape</div>
-            </div>
-
-            <button onclick="closeModal()" 
-                    class="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
-                Close
-            </button>
-        </div>
-    `;
+function markAsPracticed(word, type) {
+    closeModal();
+    alert(`Great! You practiced "${word}". Progress will be saved in the next update.`);
+    // Later we can save this to backend
 }
 
+// ==================== MODAL HELPER ====================
 function createModal(title) {
     const modal = document.createElement('div');
-    modal.className = `fixed inset-0 bg-black/70 flex items-center justify-center z-50`;
+    modal.className = `fixed inset-0 bg-black/70 flex items-center justify-center z-[999]`;
     modal.innerHTML = `
         <div class="bg-slate-900 border border-slate-700 w-full max-w-md mx-4 rounded-3xl overflow-hidden">
             <div class="flex justify-between items-center px-6 py-4 border-b border-slate-700">
@@ -157,19 +199,9 @@ function closeModal() {
     if (modal) modal.remove();
 }
 
-// ==================== INITIALIZATION ====================
+// ==================== INIT ====================
 function init() {
-    console.log('%c[Drona Lingua] main.js loaded successfully', 'color:#22c55e');
-
-    // Auto-login if user was previously logged in (simple version)
-    const savedUser = localStorage.getItem('drona_user');
-    if (savedUser) {
-        currentUser = savedUser;
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('main-content').classList.remove('hidden');
-        document.getElementById('user-display').innerText = savedUser;
-        loadUserProgress();
-    }
+    console.log('%c[Drona Lingua] Updated main.js with word practice + contextual help loaded', 'color:#22c55e');
 }
 
 window.onload = init;
