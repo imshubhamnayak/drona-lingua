@@ -13,11 +13,13 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold">Your Learning Performance</h1>
+                <h1 class="text-3xl font-bold">Learning Performance</h1>
                 <p class="text-slate-400" id="performance-user"></p>
             </div>
-            <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
-                ← Back to Modules
+            <a href="index.html" 
+               class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm flex items-center gap-x-2">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Modules</span>
             </a>
         </div>
 
@@ -25,23 +27,27 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
                 <div class="text-sm text-slate-400">Total Words Practiced</div>
-                <div class="text-4xl font-bold mt-2" id="total-practiced">0</div>
+                <div class="text-5xl font-bold mt-2 text-emerald-400" id="total-practiced">0</div>
             </div>
             <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-                <div class="text-sm text-slate-400">Modules Started</div>
-                <div class="text-4xl font-bold mt-2" id="modules-started">0</div>
+                <div class="text-sm text-slate-400">Modules Completed</div>
+                <div class="text-5xl font-bold mt-2 text-emerald-400" id="modules-completed">0</div>
             </div>
             <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
                 <div class="text-sm text-slate-400">Average Score</div>
-                <div class="text-4xl font-bold mt-2" id="average-score">0</div>
+                <div class="text-5xl font-bold mt-2 text-emerald-400" id="average-score">0</div>
             </div>
         </div>
 
-        <!-- Module-wise Progress -->
+        <!-- Module Progress List -->
         <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-            <h3 class="font-semibold mb-4">Module Progress</h3>
+            <h3 class="font-semibold mb-5 flex items-center gap-x-2">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Module-wise Progress</span>
+            </h3>
+            
             <div id="module-progress-list" class="space-y-4">
-                <!-- Populated by JavaScript -->
+                <!-- Populated dynamically by JavaScript -->
             </div>
         </div>
 
@@ -55,7 +61,7 @@
             const username = urlParams.get('user');
 
             if (!username) {
-                document.body.innerHTML = `<div class="p-10 text-center">No user found. Please login first.</div>`;
+                document.body.innerHTML = `<div class="p-10 text-center text-red-400">No user found. Please login from the main page.</div>`;
                 return;
             }
 
@@ -65,53 +71,78 @@
                 const res = await fetch(`${BACKEND_URL}/get-progress/${username}`);
                 if (!res.ok) {
                     document.getElementById('module-progress-list').innerHTML = 
-                        `<p class="text-slate-400">No progress found yet. Start practicing!</p>`;
+                        `<p class="text-slate-400 p-4">No progress found yet. Start practicing from the main page!</p>`;
                     return;
                 }
 
                 const data = await res.json();
 
-                // Overall Stats
-                document.getElementById('total-practiced').innerText = data.totalPracticed || 0;
-
-                const modulesStarted = Object.keys(data.modules || {}).length;
-                document.getElementById('modules-started').innerText = modulesStarted;
-
-                // Calculate average score
+                // === Calculate Overall Stats ===
+                let totalPracticed = 0;
                 let totalScore = 0;
-                let count = 0;
-                Object.values(data.modules || {}).forEach(mod => {
-                    if (mod.score) {
+                let modulesWithProgress = 0;
+
+                const moduleProgress = data.modules || {};
+
+                Object.values(moduleProgress).forEach(mod => {
+                    totalPracticed += mod.completed || 0;
+                    if (mod.score && mod.score > 0) {
                         totalScore += mod.score;
-                        count++;
+                        modulesWithProgress++;
                     }
                 });
-                const avgScore = count > 0 ? Math.round(totalScore / count) : 0;
-                document.getElementById('average-score').innerText = avgScore;
 
-                // Module Progress List
+                const averageScore = modulesWithProgress > 0 ? Math.round(totalScore / modulesWithProgress) : 0;
+                const modulesCompleted = Object.keys(moduleProgress).length;
+
+                // Update Stats Cards
+                document.getElementById('total-practiced').innerText = totalPracticed;
+                document.getElementById('modules-completed').innerText = modulesCompleted;
+                document.getElementById('average-score').innerText = averageScore;
+
+                // === Render Module Progress List ===
                 const container = document.getElementById('module-progress-list');
                 container.innerHTML = '';
 
-                // You can expand this with actual module names later
-                Object.entries(data.modules || {}).forEach(([modId, progress]) => {
+                // You can expand this list with all 20 modules later
+                Object.entries(moduleProgress).forEach(([modId, progress]) => {
+                    const completed = progress.completed || 0;
+                    const score = progress.score || 0;
+                    const percentage = completed > 0 ? Math.round((completed / (progress.totalWords || 10)) * 100) : 0;
+
                     const div = document.createElement('div');
-                    div.className = `flex justify-between items-center bg-slate-800 p-4 rounded-2xl`;
+                    div.className = `bg-slate-800 border border-slate-700 p-4 rounded-2xl flex justify-between items-center`;
                     div.innerHTML = `
-                        <div>
+                        <div class="flex-1">
                             <div class="font-medium">${modId}</div>
-                            <div class="text-xs text-slate-400">${progress.completed || 0} words practiced</div>
+                            <div class="text-xs text-slate-400 mt-1">${completed} words practiced</div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-emerald-400 font-bold">${progress.score || 0}</div>
-                            <div class="text-xs text-slate-400">Score</div>
+                        
+                        <div class="flex items-center gap-x-6">
+                            <div class="text-right">
+                                <div class="text-emerald-400 font-bold">${score}</div>
+                                <div class="text-xs text-slate-400">Score</div>
+                            </div>
+                            
+                            <div class="w-24">
+                                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-2 bg-emerald-500 rounded-full" style="width: ${percentage}%"></div>
+                                </div>
+                                <div class="text-xs text-right mt-1 text-slate-400">${percentage}%</div>
+                            </div>
                         </div>
                     `;
                     container.appendChild(div);
                 });
 
+                if (Object.keys(moduleProgress).length === 0) {
+                    container.innerHTML = `<p class="text-slate-400 p-4">No modules started yet.</p>`;
+                }
+
             } catch (err) {
                 console.error(err);
+                document.getElementById('module-progress-list').innerHTML = 
+                    `<p class="text-red-400 p-4">Failed to load performance data.</p>`;
             }
         }
 
