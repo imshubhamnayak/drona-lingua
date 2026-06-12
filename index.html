@@ -9,21 +9,22 @@
 </head>
 <body class="bg-slate-950 text-slate-200">
     <div class="max-w-6xl mx-auto p-6">
+        
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-bold">Drona Lingua</h1>
             <div class="flex items-center gap-x-3">
                 <span id="user-display" class="text-sm text-slate-400"></span>
-                <button onclick="logout()" class="text-sm px-3 py-1 bg-slate-800 rounded-xl">Logout</button>
+                <button onclick="logout()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">Logout</button>
             </div>
         </div>
 
         <!-- Login Section -->
-        <div id="login-section" class="max-w-md mx-auto mb-10">
+        <div id="login-section" class="max-w-md mx-auto">
             <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
                 <h2 class="text-xl font-semibold mb-4">Login / Register</h2>
                 <input id="username" type="text" placeholder="Enter your name" 
-                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-3">
+                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-3 text-white">
                 <button onclick="loginUser()" 
                         class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
                     Continue
@@ -31,36 +32,41 @@
             </div>
         </div>
 
-        <!-- Main Content (hidden until login) -->
+        <!-- Main Content -->
         <div id="main-content" class="hidden">
-            <!-- Guides -->
-            <div class="mb-10">
-                <!-- S vs SH Guide -->
+            
+            <!-- Pronunciation Guides -->
+            <div class="mb-8">
+                <!-- S vs SH -->
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-6">
-                    <h3 class="font-semibold mb-4">S vs SH</h3>
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <span class="px-3 py-1 bg-blue-600 rounded-2xl text-sm font-semibold">S vs SH</span>
+                    </div>
                     <div class="grid md:grid-cols-2 gap-4 text-sm">
-                        <div class="border border-blue-500/30 p-4 rounded-2xl">
+                        <div class="bg-slate-950 border border-blue-500/30 p-4 rounded-2xl">
                             <strong class="text-blue-400">S</strong><br>
                             Tongue forward • Thin sharp air • Relaxed lips
                         </div>
-                        <div class="border border-orange-500/30 p-4 rounded-2xl">
+                        <div class="bg-slate-950 border border-orange-500/30 p-4 rounded-2xl">
                             <strong class="text-orange-400">SH</strong><br>
                             Tongue slightly back • Softer wider air • Slightly rounded lips
                         </div>
                     </div>
                 </div>
 
-                <!-- Z vs G Guide -->
+                <!-- Z vs G -->
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
-                    <h3 class="font-semibold mb-4">Z vs G</h3>
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <span class="px-3 py-1 bg-emerald-600 rounded-2xl text-sm font-semibold">Z vs G</span>
+                    </div>
                     <div class="grid md:grid-cols-2 gap-4 text-sm">
-                        <div class="border border-emerald-500/30 p-4 rounded-2xl">
+                        <div class="bg-slate-950 border border-emerald-500/30 p-4 rounded-2xl">
                             <strong class="text-emerald-400">Z</strong><br>
-                            Tongue forward • Continuous buzz • Can hold it
+                            Continuous buzzing • Can hold it (zzzzzz)
                         </div>
-                        <div class="border border-green-500/30 p-4 rounded-2xl">
+                        <div class="bg-slate-950 border border-green-500/30 p-4 rounded-2xl">
                             <strong class="text-green-400">G</strong><br>
-                            Tongue back • Short stop sound • Cannot hold it
+                            Short stop + release • Cannot hold it
                         </div>
                     </div>
                 </div>
@@ -69,72 +75,22 @@
             <!-- Practice Modules -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button onclick="startModule('s_sh')" 
-                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left">
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
                     <div class="text-2xl font-bold text-blue-400">S vs SH</div>
-                    <div class="text-sm text-slate-400 mt-1">Practice words + Minimal pairs</div>
+                    <div class="text-sm text-slate-400 mt-1">10 words • Minimal pairs • Practice</div>
                 </button>
 
                 <button onclick="startModule('z_g')" 
-                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left">
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
                     <div class="text-2xl font-bold text-emerald-400">Z vs G</div>
-                    <div class="text-sm text-slate-400 mt-1">Practice words + Minimal pairs</div>
+                    <div class="text-sm text-slate-400 mt-1">12 words • Minimal pairs • Practice</div>
                 </button>
             </div>
         </div>
+
     </div>
 
-    <script>
-        const BACKEND_URL = "https://drona-lingua.onrender.com";
-        let currentUser = null;
-
-        async function loginUser() {
-            const username = document.getElementById('username').value.trim();
-            if (!username) return alert("Please enter your name");
-
-            try {
-                const res = await fetch(`${BACKEND_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username })
-                });
-
-                if (res.ok) {
-                    currentUser = username;
-                    document.getElementById('login-section').classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                    document.getElementById('user-display').innerText = username;
-                } else {
-                    // Register if not found
-                    await fetch(`${BACKEND_URL}/register`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username })
-                    });
-                    currentUser = username;
-                    document.getElementById('login-section').classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                    document.getElementById('user-display').innerText = username;
-                }
-            } catch (err) {
-                alert("Backend connection failed. Check Render URL.");
-            }
-        }
-
-        function startModule(type) {
-            alert(`Starting ${type.toUpperCase()} module...\n\nWe'll make this fully interactive in the next step.`);
-            // We can expand this with actual practice UI later
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('main-content').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-        }
-
-        // Auto-check if user already logged in (simple version)
-        window.onload = function() {
-            console.log('%c[Drona Lingua] Frontend connected to Render backend', 'color:#22c55e');
-        }
-        <script src="js/main.js"></script>
+    <!-- Load main.js at the end -->
+    <script src="js/main.js"></script>
 </body>
 </html>
