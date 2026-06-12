@@ -265,4 +265,10 @@ function closeModal() {
 function init() {
     console.log('%c[Drona Lingua] 20 Modules + Performance Ready', 'color:#22c55e');
 }
+
+function goToPerformance() {
+    if (currentUser) {
+        window.location.href = `performance.html?user=${currentUser}`;
+    }
+}
 window.onload = init;
