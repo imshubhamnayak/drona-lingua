@@ -13,52 +13,63 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-bold">Drona Lingua</h1>
-       <!-- In the header section -->
-<div id="header-user" class="hidden flex items-center gap-x-3">
-    <span id="user-display" class="text-sm text-slate-400"></span>
-    
-    <!-- Performance Button (Separate Page) -->
-    <button onclick="goToPerformance()" 
-            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm flex items-center gap-x-2">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Performance</span>
-    </button>
-
-    <button onclick="logout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
-        Logout
-    </button>
-</div>
-
-        <!-- Login / Register Section -->
-        <div id="login-section">
-            <div class="max-w-md mx-auto bg-slate-900 border border-slate-700 rounded-3xl p-8">
-                <h2 class="text-2xl font-semibold mb-6 text-center">Welcome to Drona Lingua</h2>
-                <input id="username" type="text" placeholder="Enter your name" 
-                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-4 text-white">
-                <button onclick="loginUser()" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
-                    Start Learning
+            
+            <div id="header-user" class="hidden flex items-center gap-x-3">
+                <span id="user-display" class="text-sm text-slate-400"></span>
+                
+                <button onclick="goToPerformance()" 
+                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm flex items-center gap-x-2">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Performance</span>
                 </button>
-                <p class="text-center text-xs text-slate-500 mt-4">Your progress will be saved</p>
+                
+                <button onclick="logout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
+                    Logout
+                </button>
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Login Section -->
+        <div id="login-section">
+            <div class="max-w-md mx-auto bg-slate-900 border border-slate-700 rounded-3xl p-8">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Start Learning</h2>
+                <input id="username" type="text" placeholder="Enter your name" 
+                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-4">
+                <button onclick="loginUser()" 
+                        class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
+                    Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Modules Section -->
         <div id="main-content" class="hidden">
-            
-            <!-- Quick Actions -->
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold">Your 20 Modules</h2>
-                <button onclick="showLearnSounds()" 
-                        class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm flex items-center gap-x-2">
-                    <i class="fa-solid fa-book"></i>
-                    <span>Learn Sounds (Images)</span>
+            </div>
+
+            <!-- Modules List -->
+            <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Practice Area (Dedicated Section) -->
+        <div id="practice-area" class="hidden mt-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 id="practice-module-title" class="text-2xl font-semibold"></h2>
+                    <p id="practice-module-subtitle" class="text-slate-400"></p>
+                </div>
+                <button onclick="backToModules()" 
+                        class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
+                    ← Back to Modules
                 </button>
             </div>
 
-            <!-- Modules Grid -->
-            <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Modules will be rendered by JS -->
+            <!-- Words List -->
+            <div id="practice-words-list" class="space-y-3">
+                <!-- Words will be loaded here as list -->
             </div>
         </div>
 
