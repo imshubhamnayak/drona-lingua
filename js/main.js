@@ -2,62 +2,40 @@ const BACKEND_URL = "https://drona-lingua.onrender.com";
 
 let currentUser = null;
 let userProgress = { modules: {}, totalPracticed: 0, overallScore: 0 };
+let currentModuleId = null;
 
-// ==================== 20 PROGRESSIVE MODULES ====================
+// ==================== 20 MODULES ====================
 const modules = {
-    // Phase 1: Basic (Hindi influence)
-    "mod_1": { id: "mod_1", title: "S vs SH - Basic", level: 1, totalWords: 10, words: [ /* S & SH words */ ] },
-    "mod_2": { id: "mod_2", title: "Z vs G - Basic", level: 1, totalWords: 12, words: [ /* Z & G words */ ] },
-    "mod_3": { id: "mod_3", title: "V vs W", level: 1, totalWords: 10, words: [] },
-    "mod_4": { id: "mod_4", title: "P vs F", level: 1, totalWords: 10, words: [] },
-    "mod_5": { id: "mod_5", title: "T vs TH", level: 1, totalWords: 10, words: [] },
-
-    // Phase 2: Vowels
-    "mod_6": { id: "mod_6", title: "Short vs Long Vowels", level: 2, totalWords: 12, words: [] },
-    "mod_7": { id: "mod_7", title: "A Sound Variations", level: 2, totalWords: 10, words: [] },
-    "mod_8": { id: "mod_8", title: "I & E Sounds", level: 2, totalWords: 10, words: [] },
-
-    // Phase 3: Common Confusions
-    "mod_9": { id: "mod_9", title: "B vs V", level: 3, totalWords: 10, words: [] },
-    "mod_10": { id: "mod_10", title: "D vs T", level: 3, totalWords: 10, words: [] },
-    "mod_11": { id: "mod_11", title: "R Sound Mastery", level: 3, totalWords: 10, words: [] },
-    "mod_12": { id: "mod_12", title: "L Sound", level: 3, totalWords: 10, words: [] },
-
-    // Phase 4: Advanced
-    "mod_13": { id: "mod_13", title: "CH vs J", level: 4, totalWords: 10, words: [] },
-    "mod_14": { id: "mod_14", title: "SH vs ZH", level: 4, totalWords: 8, words: [] },
-    "mod_15": { id: "mod_15", title: "Nasal Sounds", level: 4, totalWords: 10, words: [] },
-
-    // Phase 5: Fluency
-    "mod_16": { id: "mod_16", title: "Minimal Pairs in Sentences", level: 5, totalWords: 12, words: [] },
-    "mod_17": { id: "mod_17", title: "Tongue Twisters", level: 5, totalWords: 8, words: [] },
-    "mod_18": { id: "mod_18", title: "Connected Speech", level: 5, totalWords: 10, words: [] },
-
-    // Phase 6: Mastery
-    "mod_19": { id: "mod_19", title: "Mixed Review", level: 6, totalWords: 15, words: [] },
-    "mod_20": { id: "mod_20", title: "Final Mastery Test", level: 6, totalWords: 20, words: [] }
+    "mod_1": { id: "mod_1", title: "S vs SH - Basic", level: 1, totalWords: 10, words: [
+        { word: "sun", type: "S", cue: "Sharp air, relaxed lips" },
+        { word: "sip", type: "S", cue: "Tongue forward" },
+        { word: "see", type: "S", cue: "Smile slightly" },
+        { word: "bus", type: "S", cue: "End with sharp S" },
+        { word: "sell", type: "S", cue: "Tongue near teeth ridge" },
+        { word: "shoe", type: "SH", cue: "Rounded lips, soft air" },
+        { word: "ship", type: "SH", cue: "Tongue slightly back" },
+        { word: "she", type: "SH", cue: "Round lips gently" },
+        { word: "fish", type: "SH", cue: "End with soft SH" },
+        { word: "shell", type: "SH", cue: "Tongue back, lips rounded" }
+    ]},
+    "mod_2": { id: "mod_2", title: "Z vs G - Basic", level: 1, totalWords: 12, words: [
+        { word: "zoo", type: "Z", cue: "zzz-oo" },
+        { word: "zip", type: "Z", cue: "zzz-ip" },
+        { word: "zero", type: "Z", cue: "zee-ro" },
+        { word: "zebra", type: "Z", cue: "zee-bra" },
+        { word: "cozy", type: "Z", cue: "koh-zee" },
+        { word: "lazy", type: "Z", cue: "lay-zee" },
+        { word: "buzz", type: "Z", cue: "buhzz" },
+        { word: "go", type: "G", cue: "guh-oh" },
+        { word: "game", type: "G", cue: "gaym" },
+        { word: "good", type: "G", cue: "guud" },
+        { word: "gate", type: "G", cue: "gayt" },
+        { word: "give", type: "G", cue: "giv" }
+    ]},
+    // Add remaining 18 modules here as needed...
 };
 
-// Fill first two modules with real data (you can expand others similarly)
-modules.mod_1.words = [
-    { word: "sun", type: "S", cue: "Sharp air, relaxed lips" },
-    { word: "sip", type: "S", cue: "Tongue forward" },
-    { word: "see", type: "S", cue: "Smile slightly" },
-    { word: "shoe", type: "SH", cue: "Rounded lips, soft air" },
-    { word: "ship", type: "SH", cue: "Tongue slightly back" },
-    { word: "she", type: "SH", cue: "Round lips gently" }
-];
-
-modules.mod_2.words = [
-    { word: "zoo", type: "Z", cue: "zzz-oo" },
-    { word: "zip", type: "Z", cue: "zzz-ip" },
-    { word: "cozy", type: "Z", cue: "koh-zee" },
-    { word: "go", type: "G", cue: "guh-oh" },
-    { word: "game", type: "G", cue: "gaym" },
-    { word: "good", type: "G", cue: "guud" }
-];
-
-// ==================== AUTH + PROGRESS ====================
+// ==================== AUTH ====================
 async function loginUser() {
     const username = document.getElementById('username').value.trim();
     if (!username) return alert("Please enter your name");
@@ -91,6 +69,7 @@ function logout() {
     location.reload();
 }
 
+// ==================== PROGRESS ====================
 async function loadUserProgress() {
     if (!currentUser) return;
     try {
@@ -120,22 +99,20 @@ function renderModules() {
         const div = document.createElement('div');
         div.className = `bg-slate-900 border border-slate-700 p-5 rounded-3xl hover:border-emerald-500 transition cursor-pointer`;
         div.innerHTML = `
-            <div class="flex justify-between items-start mb-3">
+            <div class="flex justify-between items-start">
                 <div>
                     <div class="font-semibold">${mod.title}</div>
                     <div class="text-xs text-slate-400">Level ${mod.level}</div>
                 </div>
                 <div class="text-right">
                     <div class="text-emerald-400 font-bold">${percentage}%</div>
-                    <div class="text-xs text-slate-400">${progress.completed}/${mod.totalWords}</div>
+                    <div class="text-xs">${progress.completed}/${mod.totalWords}</div>
                 </div>
             </div>
-
-            <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-3">
+            <div class="h-2 bg-slate-800 rounded-full mt-3 overflow-hidden">
                 <div class="h-2 bg-emerald-500 rounded-full" style="width: ${percentage}%"></div>
             </div>
-
-            <div class="flex justify-between text-sm">
+            <div class="flex justify-between mt-3 text-sm">
                 <div>Score: <span class="font-medium">${progress.score || 0}</span></div>
                 <button onclick="event.stopImmediatePropagation(); startModule('${mod.id}')" 
                         class="px-4 py-1 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm">
@@ -148,127 +125,103 @@ function renderModules() {
     });
 }
 
-// ==================== PERFORMANCE MODAL ====================
-function showPerformance() {
-    const modal = createModal("Your Learning Performance");
-
-    let html = `<div class="p-6">`;
-    html += `<div class="mb-4"><strong>Total Words Practiced:</strong> ${userProgress.totalPracticed || 0}</div>`;
-
-    html += `<div class="space-y-3">`;
-    Object.values(modules).forEach(mod => {
-        const p = userProgress.modules?.[mod.id] || { completed: 0, score: 0 };
-        html += `
-            <div class="flex justify-between text-sm">
-                <div>${mod.title}</div>
-                <div class="text-emerald-400">${p.completed}/${mod.totalWords} • Score: ${p.score || 0}</div>
-            </div>
-        `;
-    });
-    html += `</div></div>`;
-
-    modal.innerHTML = html;
-}
-
-// ==================== PRACTICE FLOW ====================
+// ==================== PRACTICE AREA (Dedicated Section) ====================
 function startModule(moduleId) {
+    currentModuleId = moduleId;
     const mod = modules[moduleId];
-    const modal = createModal(mod.title);
 
-    let html = `<div class="p-6 grid grid-cols-2 gap-3">`;
+    document.getElementById('main-content').classList.add('hidden');
+    document.getElementById('practice-area').classList.remove('hidden');
+
+    document.getElementById('practice-module-title').innerText = mod.title;
+    document.getElementById('practice-module-subtitle').innerText = `Level ${mod.level} • ${mod.totalWords} words`;
+
+    const listContainer = document.getElementById('practice-words-list');
+    listContainer.innerHTML = '';
+
     mod.words.forEach(item => {
-        html += `
-            <div onclick="practiceWord('${moduleId}', '${item.word}', '${item.type}', '${item.cue}')" 
-                 class="bg-slate-800 hover:bg-slate-700 p-4 rounded-2xl cursor-pointer">
-                <div class="font-semibold">${item.word}</div>
-                <div class="text-xs text-slate-400">${item.cue}</div>
+        const div = document.createElement('div');
+        div.className = `bg-slate-900 border border-slate-700 p-4 rounded-2xl flex justify-between items-center`;
+        div.innerHTML = `
+            <div>
+                <div class="font-semibold text-lg">${item.word}</div>
+                <div class="text-sm text-slate-400">${item.cue}</div>
             </div>
+            <button onclick="practiceWord('${item.word}', '${item.type}', '${item.cue}', this)" 
+                    class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm">
+                Practice
+            </button>
         `;
+        listContainer.appendChild(div);
     });
-    html += `</div>`;
-    modal.innerHTML = html;
 }
 
-function practiceWord(moduleId, word, type, cue) {
-    closeModal();
-    const modal = createModal(`Practice: ${word}`);
-
+function practiceWord(word, type, cue, buttonElement) {
     const help = getContextualHelp(type);
 
-    modal.innerHTML = `
-        <div class="p-6">
-            <div class="text-center mb-6">
-                <div class="text-6xl font-bold">${word}</div>
-                <div class="text-emerald-400 mt-1">${cue}</div>
-            </div>
-            ${help}
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-700 rounded-2xl">Close</button>
-                <button onclick="completeWord('${moduleId}', '${word}')" 
-                        class="flex-1 py-3 bg-emerald-600 rounded-2xl font-medium">
-                    Mark as Practiced
-                </button>
-            </div>
+    const practiceDiv = document.createElement('div');
+    practiceDiv.className = `mt-4 bg-slate-800 border border-emerald-600 p-5 rounded-2xl`;
+    practiceDiv.innerHTML = `
+        <div class="text-center mb-4">
+            <div class="text-5xl font-bold">${word}</div>
+            <div class="text-emerald-400 mt-1">${cue}</div>
+        </div>
+        ${help}
+        <div class="flex gap-3 mt-5">
+            <button onclick="this.closest('.bg-slate-800').remove()" 
+                    class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 rounded-2xl">Close</button>
+            <button onclick="markWordPracticed('${word}', this)" 
+                    class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
+                Mark as Practiced
+            </button>
         </div>
     `;
+
+    buttonElement.parentElement.appendChild(practiceDiv);
+    buttonElement.style.display = 'none';
 }
 
 function getContextualHelp(type) {
-    if (type === "S") return `<div class="bg-blue-950 p-4 rounded-2xl text-sm mb-4">Tongue forward • Thin sharp air • Relaxed lips</div>`;
-    if (type === "SH") return `<div class="bg-orange-950 p-4 rounded-2xl text-sm mb-4">Tongue slightly back • Softer air • Slightly rounded lips</div>`;
-    if (type === "Z") return `<div class="bg-emerald-950 p-4 rounded-2xl text-sm mb-4">Continuous buzzing • Can hold it</div>`;
-    if (type === "G") return `<div class="bg-green-950 p-4 rounded-2xl text-sm mb-4">Short stop + release • Cannot hold it</div>`;
+    if (type === "S") return `<div class="text-sm bg-blue-950 p-3 rounded-xl">Tongue forward • Thin sharp air • Relaxed lips</div>`;
+    if (type === "SH") return `<div class="text-sm bg-orange-950 p-3 rounded-xl">Tongue slightly back • Softer air • Slightly rounded lips</div>`;
+    if (type === "Z") return `<div class="text-sm bg-emerald-950 p-3 rounded-xl">Continuous buzzing • Can hold it</div>`;
+    if (type === "G") return `<div class="text-sm bg-green-950 p-3 rounded-xl">Short stop + release • Cannot hold it</div>`;
     return '';
 }
 
-function completeWord(moduleId, word) {
-    closeModal();
+function markWordPracticed(word, element) {
+    const modProgress = userProgress.modules[currentModuleId] || { completed: 0, score: 0, practicedWords: [] };
 
-    if (!userProgress.modules[moduleId]) {
-        userProgress.modules[moduleId] = { completed: 0, score: 0, practicedWords: [] };
+    if (!modProgress.practicedWords.includes(word)) {
+        modProgress.practicedWords.push(word);
+        modProgress.completed = modProgress.practicedWords.length;
+        modProgress.score = Math.round((modProgress.completed / modules[currentModuleId].totalWords) * 100);
     }
 
-    const modP = userProgress.modules[moduleId];
-    if (!modP.practicedWords.includes(word)) {
-        modP.practicedWords.push(word);
-        modP.completed = modP.practicedWords.length;
-        modP.score = Math.round((modP.completed / modules[moduleId].totalWords) * 100);
-    }
-
+    userProgress.modules[currentModuleId] = modProgress;
     userProgress.totalPracticed = Object.values(userProgress.modules).reduce((sum, m) => sum + (m.completed || 0), 0);
+
     saveProgress();
     renderModules();
+
+    element.closest('.bg-slate-800').remove();
     alert(`Good! "${word}" marked as practiced.`);
 }
 
-// ==================== MODAL + INIT ====================
-function createModal(title) {
-    const modal = document.createElement('div');
-    modal.className = `fixed inset-0 bg-black/70 flex items-center justify-center z-[999]`;
-    modal.innerHTML = `
-        <div class="bg-slate-900 border border-slate-700 w-full max-w-md mx-4 rounded-3xl overflow-hidden">
-            <div class="flex justify-between px-6 py-4 border-b border-slate-700">
-                <h3 class="font-semibold">${title}</h3>
-                <button onclick="closeModal()" class="text-2xl">×</button>
-            </div>
-            <div id="modal-content"></div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    return modal.querySelector('#modal-content');
+function backToModules() {
+    document.getElementById('practice-area').classList.add('hidden');
+    document.getElementById('main-content').classList.remove('hidden');
 }
 
-function closeModal() {
-    document.querySelectorAll('.fixed.inset-0').forEach(el => el.remove());
-}
-
-function init() {
-    console.log('%c[Drona Lingua] 20 Modules + Performance Ready', 'color:#22c55e');
-}
-
+// ==================== PERFORMANCE PAGE ====================
 function goToPerformance() {
     if (currentUser) {
         window.location.href = `performance.html?user=${currentUser}`;
     }
+}
+
+// ==================== INIT ====================
+function init() {
+    console.log('%c[Drona Lingua] Refined version loaded', 'color:#22c55e');
 }
 window.onload = init;
