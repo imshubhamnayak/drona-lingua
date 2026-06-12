@@ -1,163 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Performance Dashboard • Drona Lingua</title>
-  <style>
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #0a0f1c;
-      color: #e2e8f0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #1e2937;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 14px 16px;
-      text-align: left;
-      border-bottom: 1px solid #334155;
-    }
-    th {
-      background: #111827;
-      font-weight: 600;
-    }
-    tr:hover {
-      background: #334155;
-    }
-    button {
-      background: #3b82f6;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-    .time-cell {
-      font-size: 13px;
-      line-height: 1.5;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance • Drona Lingua</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-950 text-slate-200">
+    <div class="max-w-5xl mx-auto p-6">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold">Your Learning Performance</h1>
+                <p class="text-slate-400" id="performance-user"></p>
+            </div>
+            <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
+                ← Back to Modules
+            </a>
+        </div>
 
-  <h1>📊 Drona Lingua - Performance Dashboard</h1>
-  
-  <button onclick="loadPerformance()">Refresh Data</button>
+        <!-- Overall Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                <div class="text-sm text-slate-400">Total Words Practiced</div>
+                <div class="text-4xl font-bold mt-2" id="total-practiced">0</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                <div class="text-sm text-slate-400">Modules Started</div>
+                <div class="text-4xl font-bold mt-2" id="modules-started">0</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                <div class="text-sm text-slate-400">Average Score</div>
+                <div class="text-4xl font-bold mt-2" id="average-score">0</div>
+            </div>
+        </div>
 
-  <table id="performanceTable">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Level</th>
-        <th>XP</th>
-        <th>Modules Completed</th>
-        <th>Time Spent</th>
-        <th>Last Practiced</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Data populated by JavaScript -->
-    </tbody>
-  </table>
+        <!-- Module-wise Progress -->
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+            <h3 class="font-semibold mb-4">Module Progress</h3>
+            <div id="module-progress-list" class="space-y-4">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
 
-  <script>
-    const API_URL = "https://drona-lingua-backend.onrender.com";
+    </div>
 
-    // Function to format last practiced time nicely
-    function formatLastPracticed(dateString) {
-      if (!dateString) return "Never";
+    <script>
+        const BACKEND_URL = "https://drona-lingua.onrender.com";
 
-      const date = new Date(dateString);
-      const now = new Date();
+        async function loadPerformance() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('user');
 
-      const isToday = date.toDateString() === now.toDateString();
-      const isYesterday = new Date(now - 86400000).toDateString() === date.toDateString();
+            if (!username) {
+                document.body.innerHTML = `<div class="p-10 text-center">No user found. Please login first.</div>`;
+                return;
+            }
 
-      const time = date.toLocaleTimeString([], { 
-        hour: 'numeric', 
-        minute: '2-digit', 
-        hour12: true 
-      });
+            document.getElementById('performance-user').innerText = `Progress for: ${username}`;
 
-      if (isToday) {
-        return `Today at ${time}`;
-      } else if (isYesterday) {
-        return `Yesterday at ${time}`;
-      } else {
-        return date.toLocaleDateString() + " at " + time;
-      }
-    }
+            try {
+                const res = await fetch(`${BACKEND_URL}/get-progress/${username}`);
+                if (!res.ok) {
+                    document.getElementById('module-progress-list').innerHTML = 
+                        `<p class="text-slate-400">No progress found yet. Start practicing!</p>`;
+                    return;
+                }
 
-    async function loadPerformance() {
-      const tbody = document.querySelector("#performanceTable tbody");
-      tbody.innerHTML = "<tr><td colspan='6'>Loading...</td></tr>";
+                const data = await res.json();
 
-      try {
-        const res = await fetch(`${API_URL}/api/users`);
-        const users = await res.json();
+                // Overall Stats
+                document.getElementById('total-practiced').innerText = data.totalPracticed || 0;
 
-        tbody.innerHTML = "";
+                const modulesStarted = Object.keys(data.modules || {}).length;
+                document.getElementById('modules-started').innerText = modulesStarted;
 
-        if (users.length === 0) {
-          tbody.innerHTML = "<tr><td colspan='6'>No users found yet.</td></tr>";
-          return;
+                // Calculate average score
+                let totalScore = 0;
+                let count = 0;
+                Object.values(data.modules || {}).forEach(mod => {
+                    if (mod.score) {
+                        totalScore += mod.score;
+                        count++;
+                    }
+                });
+                const avgScore = count > 0 ? Math.round(totalScore / count) : 0;
+                document.getElementById('average-score').innerText = avgScore;
+
+                // Module Progress List
+                const container = document.getElementById('module-progress-list');
+                container.innerHTML = '';
+
+                // You can expand this with actual module names later
+                Object.entries(data.modules || {}).forEach(([modId, progress]) => {
+                    const div = document.createElement('div');
+                    div.className = `flex justify-between items-center bg-slate-800 p-4 rounded-2xl`;
+                    div.innerHTML = `
+                        <div>
+                            <div class="font-medium">${modId}</div>
+                            <div class="text-xs text-slate-400">${progress.completed || 0} words practiced</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-emerald-400 font-bold">${progress.score || 0}</div>
+                            <div class="text-xs text-slate-400">Score</div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-        users.forEach(user => {
-          const completed = user.completed_modules ? user.completed_modules.length : 0;
-
-          // Format time spent
-          let timeHtml = "No data";
-          if (user.time_spent && Object.keys(user.time_spent).length > 0) {
-            timeHtml = "";
-            let totalSeconds = 0;
-
-            Object.keys(user.time_spent).forEach(modId => {
-              const secs = user.time_spent[modId];
-              totalSeconds += secs;
-              const min = Math.floor(secs / 60);
-              timeHtml += `M${modId}: ${min}m<br>`;
-            });
-
-            const totalMin = Math.floor(totalSeconds / 60);
-            timeHtml += `<strong>Total: ${totalMin} min</strong>`;
-          }
-
-          const lastPracticed = formatLastPracticed(user.last_practiced);
-
-          const row = `
-            <tr>
-              <td><strong>${user.username}</strong></td>
-              <td>Level ${user.level}</td>
-              <td>${user.xp} XP</td>
-              <td>${completed} / 20</td>
-              <td class="time-cell">${timeHtml}</td>
-              <td>${lastPracticed}</td>
-            </tr>
-          `;
-          tbody.innerHTML += row;
-        });
-
-      } catch (error) {
-        console.error("Error loading performance:", error);
-        tbody.innerHTML = `<tr><td colspan='6' style='color: red;'>Failed to load data</td></tr>`;
-      }
-    }
-
-    // Load when page opens
-    loadPerformance();
-  </script>
+        window.onload = loadPerformance;
+    </script>
 </body>
 </html>
