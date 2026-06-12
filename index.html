@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drona Lingua</title>
+    <title>Drona Lingua • 20 Modules</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -13,84 +13,52 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-bold">Drona Lingua</h1>
-            <div class="flex items-center gap-x-3">
+            <div id="header-user" class="hidden flex items-center gap-x-4">
                 <span id="user-display" class="text-sm text-slate-400"></span>
-                <button onclick="logout()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">Logout</button>
+                <button onclick="showPerformance()" 
+                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm flex items-center gap-x-2">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Performance</span>
+                </button>
+                <button onclick="logout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">Logout</button>
             </div>
         </div>
 
-        <!-- Login Section -->
-        <div id="login-section" class="max-w-md mx-auto">
-            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-4">Login / Register</h2>
+        <!-- Login / Register Section -->
+        <div id="login-section">
+            <div class="max-w-md mx-auto bg-slate-900 border border-slate-700 rounded-3xl p-8">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Welcome to Drona Lingua</h2>
                 <input id="username" type="text" placeholder="Enter your name" 
-                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-3 text-white">
+                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-4 text-white">
                 <button onclick="loginUser()" 
                         class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
-                    Continue
+                    Start Learning
                 </button>
+                <p class="text-center text-xs text-slate-500 mt-4">Your progress will be saved</p>
             </div>
         </div>
 
         <!-- Main Content -->
         <div id="main-content" class="hidden">
             
-            <!-- Pronunciation Guides -->
-            <div class="mb-8">
-                <!-- S vs SH -->
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-6">
-                    <div class="flex items-center gap-x-3 mb-4">
-                        <span class="px-3 py-1 bg-blue-600 rounded-2xl text-sm font-semibold">S vs SH</span>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-4 text-sm">
-                        <div class="bg-slate-950 border border-blue-500/30 p-4 rounded-2xl">
-                            <strong class="text-blue-400">S</strong><br>
-                            Tongue forward • Thin sharp air • Relaxed lips
-                        </div>
-                        <div class="bg-slate-950 border border-orange-500/30 p-4 rounded-2xl">
-                            <strong class="text-orange-400">SH</strong><br>
-                            Tongue slightly back • Softer wider air • Slightly rounded lips
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Z vs G -->
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
-                    <div class="flex items-center gap-x-3 mb-4">
-                        <span class="px-3 py-1 bg-emerald-600 rounded-2xl text-sm font-semibold">Z vs G</span>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-4 text-sm">
-                        <div class="bg-slate-950 border border-emerald-500/30 p-4 rounded-2xl">
-                            <strong class="text-emerald-400">Z</strong><br>
-                            Continuous buzzing • Can hold it (zzzzzz)
-                        </div>
-                        <div class="bg-slate-950 border border-green-500/30 p-4 rounded-2xl">
-                            <strong class="text-green-400">G</strong><br>
-                            Short stop + release • Cannot hold it
-                        </div>
-                    </div>
-                </div>
+            <!-- Quick Actions -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold">Your 20 Modules</h2>
+                <button onclick="showLearnSounds()" 
+                        class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm flex items-center gap-x-2">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Learn Sounds (Images)</span>
+                </button>
             </div>
 
-            <!-- Practice Modules -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button onclick="startModule('s_sh')" 
-                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
-                    <div class="text-2xl font-bold text-blue-400">S vs SH</div>
-                    <div class="text-sm text-slate-400 mt-1">10 words • Minimal pairs • Practice</div>
-                </button>
-
-                <button onclick="startModule('z_g')" 
-                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
-                    <div class="text-2xl font-bold text-emerald-400">Z vs G</div>
-                    <div class="text-sm text-slate-400 mt-1">12 words • Minimal pairs • Practice</div>
-                </button>
+            <!-- Modules Grid -->
+            <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Modules will be rendered by JS -->
             </div>
         </div>
 
     </div>
 
-    <!-- Load main.js at the end -->
     <script src="js/main.js"></script>
 </body>
 </html>
