@@ -3,7 +3,7 @@ const BACKEND_URL = "https://drona-lingua.onrender.com";
 
 let currentUser = null;
 
-// ==================== WORD DATA ====================
+// Word Data
 const sShWords = [
     { word: "sun", type: "S", cue: "Sharp air, relaxed lips" },
     { word: "sip", type: "S", cue: "Tongue forward" },
@@ -34,8 +34,7 @@ const zgWords = [
 
 // ==================== AUTH ====================
 async function loginUser() {
-    const usernameInput = document.getElementById('username');
-    const username = usernameInput.value.trim();
+    const username = document.getElementById('username').value.trim();
     if (!username) return alert("Please enter your name");
 
     try {
@@ -57,10 +56,9 @@ async function loginUser() {
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('main-content').classList.remove('hidden');
         document.getElementById('user-display').innerText = username;
-        loadUserProgress();
 
-    } catch (error) {
-        alert("Backend connection failed");
+    } catch (err) {
+        alert("Backend connection failed. Check Render URL.");
     }
 }
 
@@ -68,32 +66,10 @@ function logout() {
     currentUser = null;
     document.getElementById('main-content').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
+    document.getElementById('username').value = '';
 }
 
-// ==================== PROGRESS ====================
-async function loadUserProgress() {
-    if (!currentUser) return;
-    try {
-        const res = await fetch(`${BACKEND_URL}/get-progress/${currentUser}`);
-        if (res.ok) {
-            const data = await res.json();
-            console.log("Progress loaded:", data);
-        }
-    } catch (err) {}
-}
-
-async function saveProgress(progress) {
-    if (!currentUser) return;
-    try {
-        await fetch(`${BACKEND_URL}/save-progress`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: currentUser, progress })
-        });
-    } catch (err) {}
-}
-
-// ==================== EXERCISE ====================
+// ==================== PRACTICE ====================
 function startModule(type) {
     if (type === 's_sh') {
         showWordList(sShWords, "S vs SH Practice");
@@ -104,14 +80,12 @@ function startModule(type) {
 
 function showWordList(words, title) {
     const modal = createModal(title);
-    
-    let html = `<div class="p-6">`;
-    html += `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">`;
+    let html = `<div class="p-6"><div class="grid grid-cols-2 gap-3">`;
 
-    words.forEach((item, index) => {
+    words.forEach((item) => {
         html += `
-            <div onclick="practiceWord(${index}, '${item.type}', '${item.word}', '${item.cue}')" 
-                 class="word-card bg-slate-800 hover:bg-slate-700 border border-slate-700 p-4 rounded-2xl cursor-pointer">
+            <div onclick="practiceWord('${item.word}', '${item.type}', '${item.cue}')" 
+                 class="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-4 rounded-2xl cursor-pointer">
                 <div class="font-semibold text-lg">${item.word}</div>
                 <div class="text-xs text-slate-400 mt-1">${item.cue}</div>
             </div>
@@ -122,28 +96,28 @@ function showWordList(words, title) {
     modal.innerHTML = html;
 }
 
-function practiceWord(index, type, word, cue) {
-    closeModal(); // close word list
+function practiceWord(word, type, cue) {
+    closeModal();
 
     const modal = createModal(`Practice: ${word}`);
 
-    let guideHTML = '';
+    let guide = '';
 
     if (type === 'S' || type === 'SH') {
-        guideHTML = `
+        guide = `
             <div class="bg-slate-950 border border-slate-700 rounded-2xl p-4 mb-4 text-sm">
-                <div class="font-semibold mb-2 text-blue-400">S vs SH Guide</div>
+                <div class="font-semibold text-blue-400 mb-2">S vs SH Help</div>
                 <div><strong>Tongue:</strong> Forward (S) vs Slightly back (SH)</div>
                 <div><strong>Air:</strong> Thin & sharp (S) vs Wider & softer (SH)</div>
                 <div><strong>Lips:</strong> Relaxed (S) vs Slightly rounded (SH)</div>
             </div>
         `;
-    } else if (type === 'Z' || type === 'G') {
-        guideHTML = `
+    } else {
+        guide = `
             <div class="bg-slate-950 border border-slate-700 rounded-2xl p-4 mb-4 text-sm">
-                <div class="font-semibold mb-2 text-emerald-400">Z vs G Guide</div>
-                <div><strong>Z:</strong> Continuous buzzing sound (can hold it)</div>
-                <div><strong>G:</strong> Short stop + release sound (cannot hold it)</div>
+                <div class="font-semibold text-emerald-400 mb-2">Z vs G Help</div>
+                <div><strong>Z:</strong> Continuous buzzing (can hold it)</div>
+                <div><strong>G:</strong> Short stop + release (cannot hold it)</div>
             </div>
         `;
     }
@@ -151,19 +125,15 @@ function practiceWord(index, type, word, cue) {
     modal.innerHTML = `
         <div class="p-6">
             <div class="text-center mb-6">
-                <div class="text-6xl font-bold tracking-wider mb-2">${word}</div>
+                <div class="text-6xl font-bold mb-2">${word}</div>
                 <div class="text-emerald-400">${cue}</div>
             </div>
 
-            ${guideHTML}
+            ${guide}
 
-            <div class="flex gap-3 mt-6">
-                <button onclick="closeModal()" 
-                        class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-2xl">
-                    Close
-                </button>
-                <button onclick="markAsPracticed('${word}', '${type}')" 
-                        class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-2xl">Close</button>
+                <button onclick="markPracticed('${word}')" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
                     Mark as Practiced
                 </button>
             </div>
@@ -171,13 +141,13 @@ function practiceWord(index, type, word, cue) {
     `;
 }
 
-function markAsPracticed(word, type) {
+function markPracticed(word) {
     closeModal();
-    alert(`Great! You practiced "${word}". Progress will be saved in the next update.`);
+    alert(`Good job! You practiced "${word}".`);
     // Later we can save this to backend
 }
 
-// ==================== MODAL HELPER ====================
+// ==================== MODAL ====================
 function createModal(title) {
     const modal = document.createElement('div');
     modal.className = `fixed inset-0 bg-black/70 flex items-center justify-center z-[999]`;
@@ -185,7 +155,7 @@ function createModal(title) {
         <div class="bg-slate-900 border border-slate-700 w-full max-w-md mx-4 rounded-3xl overflow-hidden">
             <div class="flex justify-between items-center px-6 py-4 border-b border-slate-700">
                 <h3 class="font-semibold">${title}</h3>
-                <button onclick="closeModal()" class="text-2xl text-slate-400 hover:text-white">×</button>
+                <button onclick="closeModal()" class="text-2xl">×</button>
             </div>
             <div id="modal-content"></div>
         </div>
@@ -199,9 +169,8 @@ function closeModal() {
     if (modal) modal.remove();
 }
 
-// ==================== INIT ====================
+// Init
 function init() {
-    console.log('%c[Drona Lingua] Updated main.js with word practice + contextual help loaded', 'color:#22c55e');
+    console.log('%c[Drona Lingua] main.js loaded successfully', 'color:#22c55e');
 }
-
 window.onload = init;
