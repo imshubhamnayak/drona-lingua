@@ -13,16 +13,21 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-bold">Drona Lingua</h1>
-            <div id="header-user" class="hidden flex items-center gap-x-4">
-                <span id="user-display" class="text-sm text-slate-400"></span>
-                <button onclick="showPerformance()" 
-                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm flex items-center gap-x-2">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Performance</span>
-                </button>
-                <button onclick="logout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">Logout</button>
-            </div>
-        </div>
+       <!-- In the header section -->
+<div id="header-user" class="hidden flex items-center gap-x-3">
+    <span id="user-display" class="text-sm text-slate-400"></span>
+    
+    <!-- Performance Button (Separate Page) -->
+    <button onclick="goToPerformance()" 
+            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm flex items-center gap-x-2">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Performance</span>
+    </button>
+
+    <button onclick="logout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
+        Logout
+    </button>
+</div>
 
         <!-- Login / Register Section -->
         <div id="login-section">
