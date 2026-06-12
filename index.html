@@ -3,170 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drona Lingua • Master Difficult Sounds</title>
+    <title>Drona Lingua</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="bg-slate-950 text-slate-200">
     <div class="max-w-6xl mx-auto p-6">
-        
         <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
-            <div>
-                <h1 class="text-4xl font-bold tracking-tight">Drona Lingua</h1>
-                <p class="text-slate-400">Master the sounds that hold you back</p>
-            </div>
-            <div class="px-4 py-2 bg-slate-900 rounded-2xl text-sm flex items-center gap-x-2">
-                <i class="fa-solid fa-user text-emerald-400"></i>
-                <span>Shubham</span>
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold">Drona Lingua</h1>
+            <div class="flex items-center gap-x-3">
+                <span id="user-display" class="text-sm text-slate-400"></span>
+                <button onclick="logout()" class="text-sm px-3 py-1 bg-slate-800 rounded-xl">Logout</button>
             </div>
         </div>
 
-        <!-- How to Make the Sound -->
-        <div class="mb-10">
-            <div class="flex items-center gap-x-3 mb-4">
-                <i class="fa-solid fa-graduation-cap text-emerald-400 text-2xl"></i>
-                <h2 class="text-2xl font-semibold">How to Make the Sound</h2>
-            </div>
-
-            <!-- S vs SH Guide -->
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-8">
-                <div class="flex items-center gap-x-3 mb-5">
-                    <div class="px-4 py-1.5 bg-blue-600 text-white rounded-2xl text-sm font-semibold flex items-center gap-x-2">
-                        <span>S</span> <span class="font-normal">vs</span> <span>SH</span>
-                    </div>
-                    <div class="text-sm text-slate-400">Most common confusion for UP/Bihar speakers</div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- S -->
-                    <div class="border border-blue-500/30 bg-slate-950 rounded-2xl p-5">
-                        <div class="flex items-center gap-x-3 mb-4">
-                            <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">S</div>
-                            <div>
-                                <div class="font-semibold text-lg">S <span class="text-blue-400">(as in sun)</span></div>
-                                <div class="text-xs text-blue-400">Thin, sharp hiss • Voiceless</div>
-                            </div>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div><span class="font-medium">Tongue:</span> Forward, close to upper teeth ridge</div>
-                            <div><span class="font-medium">Airflow:</span> Thin air through narrow gap → <span class="font-mono text-blue-400">sssss</span></div>
-                            <div><span class="font-medium">Lips:</span> Relaxed or slightly smiling</div>
-                        </div>
-                    </div>
-
-                    <!-- SH -->
-                    <div class="border border-orange-500/30 bg-slate-950 rounded-2xl p-5">
-                        <div class="flex items-center gap-x-3 mb-4">
-                            <div class="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">SH</div>
-                            <div>
-                                <div class="font-semibold text-lg">SH <span class="text-orange-400">(as in shoe)</span></div>
-                                <div class="text-xs text-orange-400">Softer hush • Voiceless</div>
-                            </div>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div><span class="font-medium">Tongue:</span> Slightly back + rounded at front</div>
-                            <div><span class="font-medium">Airflow:</span> Softer air through wider channel → <span class="font-mono text-orange-400">shhhhh</span></div>
-                            <div><span class="font-medium">Lips:</span> Slightly rounded</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Z vs G Guide -->
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
-                <div class="flex items-center gap-x-3 mb-5">
-                    <div class="px-4 py-1.5 bg-emerald-600 text-white rounded-2xl text-sm font-semibold flex items-center gap-x-2">
-                        <span>Z</span> <span class="font-normal">vs</span> <span>G</span>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Z -->
-                    <div class="border border-emerald-500/30 bg-slate-950 rounded-2xl p-5">
-                        <div class="flex items-center gap-x-3 mb-4">
-                            <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">Z</div>
-                            <div>
-                                <div class="font-semibold text-lg">Z <span class="text-emerald-400">(as in zoo)</span></div>
-                                <div class="text-xs text-emerald-400">Continuous buzzing • Voiced</div>
-                            </div>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div><span class="font-medium">Tongue:</span> Forward, near upper teeth</div>
-                            <div><span class="font-medium">Airflow:</span> Vocal cords vibrate → continuous <span class="font-mono">zzzzzz</span></div>
-                            <div><span class="font-medium">Can hold it?</span> Yes</div>
-                        </div>
-                    </div>
-
-                    <!-- G -->
-                    <div class="border border-green-500/30 bg-slate-950 rounded-2xl p-5">
-                        <div class="flex items-center gap-x-3 mb-4">
-                            <div class="w-10 h-10 bg-green-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">G</div>
-                            <div>
-                                <div class="font-semibold text-lg">G <span class="text-green-400">(as in go)</span></div>
-                                <div class="text-xs text-green-400">Short stop sound • Voiced</div>
-                            </div>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div><span class="font-medium">Tongue:</span> Back, touching soft palate</div>
-                            <div><span class="font-medium">Airflow:</span> Blocked then released suddenly</div>
-                            <div><span class="font-medium">Can hold it?</span> No</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Login Section -->
+        <div id="login-section" class="max-w-md mx-auto mb-10">
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                <h2 class="text-xl font-semibold mb-4">Login / Register</h2>
+                <input id="username" type="text" placeholder="Enter your name" 
+                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-3">
+                <button onclick="loginUser()" 
+                        class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
+                    Continue
+                </button>
             </div>
         </div>
 
-        <!-- Practice Modules -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button onclick="startPractice('s_sh')" 
-                    class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
-                <div class="flex items-center gap-x-3">
-                    <span class="text-3xl font-bold text-blue-400">S</span>
-                    <span class="text-3xl font-bold text-orange-400">SH</span>
+        <!-- Main Content (hidden until login) -->
+        <div id="main-content" class="hidden">
+            <!-- Guides -->
+            <div class="mb-10">
+                <!-- S vs SH Guide -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-6">
+                    <h3 class="font-semibold mb-4">S vs SH</h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="border border-blue-500/30 p-4 rounded-2xl">
+                            <strong class="text-blue-400">S</strong><br>
+                            Tongue forward • Thin sharp air • Relaxed lips
+                        </div>
+                        <div class="border border-orange-500/30 p-4 rounded-2xl">
+                            <strong class="text-orange-400">SH</strong><br>
+                            Tongue slightly back • Softer wider air • Slightly rounded lips
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-2 font-semibold text-lg">S vs SH Practice</div>
-                <div class="text-sm text-slate-400">Words • Minimal pairs • Sentences</div>
-            </button>
 
-            <button onclick="startPractice('z_g')" 
-                    class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left transition">
-                <div class="flex items-center gap-x-3">
-                    <span class="text-3xl font-bold text-emerald-400">Z</span>
-                    <span class="text-3xl font-bold text-green-400">G</span>
+                <!-- Z vs G Guide -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+                    <h3 class="font-semibold mb-4">Z vs G</h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="border border-emerald-500/30 p-4 rounded-2xl">
+                            <strong class="text-emerald-400">Z</strong><br>
+                            Tongue forward • Continuous buzz • Can hold it
+                        </div>
+                        <div class="border border-green-500/30 p-4 rounded-2xl">
+                            <strong class="text-green-400">G</strong><br>
+                            Tongue back • Short stop sound • Cannot hold it
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-2 font-semibold text-lg">Z vs G Practice</div>
-                <div class="text-sm text-slate-400">Words • Minimal pairs</div>
-            </button>
+            </div>
+
+            <!-- Practice Modules -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="startModule('s_sh')" 
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left">
+                    <div class="text-2xl font-bold text-blue-400">S vs SH</div>
+                    <div class="text-sm text-slate-400 mt-1">Practice words + Minimal pairs</div>
+                </button>
+
+                <button onclick="startModule('z_g')" 
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700 p-6 rounded-3xl text-left">
+                    <div class="text-2xl font-bold text-emerald-400">Z vs G</div>
+                    <div class="text-sm text-slate-400 mt-1">Practice words + Minimal pairs</div>
+                </button>
+            </div>
         </div>
-
     </div>
 
     <script>
-        // ✅ Your Render Backend URL
         const BACKEND_URL = "https://drona-lingua.onrender.com";
+        let currentUser = null;
 
-        function startPractice(type) {
-            if (type === 's_sh') {
-                alert("S vs SH practice module will open here.\nWe can make it interactive next.");
-            } else if (type === 'z_g') {
-                alert("Z vs G practice module will open here.");
-            }
-        }
+        async function loginUser() {
+            const username = document.getElementById('username').value.trim();
+            if (!username) return alert("Please enter your name");
 
-        // Test backend connection
-        async function testBackend() {
             try {
-                const res = await fetch(`${BACKEND_URL}/`);
+                const res = await fetch(`${BACKEND_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+
                 if (res.ok) {
-                    console.log('%c✅ Backend connected successfully!', 'color:#22c55e');
+                    currentUser = username;
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                    document.getElementById('user-display').innerText = username;
+                } else {
+                    // Register if not found
+                    await fetch(`${BACKEND_URL}/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username })
+                    });
+                    currentUser = username;
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                    document.getElementById('user-display').innerText = username;
                 }
             } catch (err) {
-                console.log('%c❌ Could not connect to backend', 'color:#ef4444');
+                alert("Backend connection failed. Check Render URL.");
             }
         }
 
-        window.onload = testBackend;
+        function startModule(type) {
+            alert(`Starting ${type.toUpperCase()} module...\n\nWe'll make this fully interactive in the next step.`);
+            // We can expand this with actual practice UI later
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+        }
+
+        // Auto-check if user already logged in (simple version)
+        window.onload = function() {
+            console.log('%c[Drona Lingua] Frontend connected to Render backend', 'color:#22c55e');
+        }
     </script>
 </body>
 </html>
