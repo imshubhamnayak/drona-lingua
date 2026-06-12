@@ -2,8 +2,13 @@
 const BACKEND_URL = "https://drona-lingua.onrender.com";
 
 let currentUser = null;
+let userProgress = {
+    practicedWords: [],
+    totalPracticed: 0,
+    accuracy: 0
+};
 
-// Word Data
+// ==================== WORD DATA ====================
 const sShWords = [
     { word: "sun", type: "S", cue: "Sharp air, relaxed lips" },
     { word: "sip", type: "S", cue: "Tongue forward" },
@@ -57,8 +62,10 @@ async function loginUser() {
         document.getElementById('main-content').classList.remove('hidden');
         document.getElementById('user-display').innerText = username;
 
+        await loadUserProgress();
+
     } catch (err) {
-        alert("Backend connection failed. Check Render URL.");
+        alert("Backend connection failed");
     }
 }
 
@@ -66,7 +73,44 @@ function logout() {
     currentUser = null;
     document.getElementById('main-content').classList.add('hidden');
     document.getElementById('login-section').classList.remove('hidden');
-    document.getElementById('username').value = '';
+}
+
+// ==================== PROGRESS ====================
+async function loadUserProgress() {
+    if (!currentUser) return;
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/get-progress/${currentUser}`);
+        if (res.ok) {
+            const data = await res.json();
+            userProgress = data;
+            updatePerformanceUI();
+        }
+    } catch (err) {
+        console.log("No previous progress found");
+    }
+}
+
+async function saveProgress() {
+    if (!currentUser) return;
+
+    try {
+        await fetch(`${BACKEND_URL}/save-progress`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: currentUser,
+                progress: userProgress
+            })
+        });
+    } catch (err) {
+        console.error("Failed to save progress");
+    }
+}
+
+function updatePerformanceUI() {
+    // You can expand this later to show in a Performance tab
+    console.log("Current Progress:", userProgress);
 }
 
 // ==================== PRACTICE ====================
@@ -101,23 +145,46 @@ function practiceWord(word, type, cue) {
 
     const modal = createModal(`Practice: ${word}`);
 
-    let guide = '';
+    // === Contextual Help (Only for the current sound) ===
+    let helpHTML = '';
 
-    if (type === 'S' || type === 'SH') {
-        guide = `
-            <div class="bg-slate-950 border border-slate-700 rounded-2xl p-4 mb-4 text-sm">
-                <div class="font-semibold text-blue-400 mb-2">S vs SH Help</div>
-                <div><strong>Tongue:</strong> Forward (S) vs Slightly back (SH)</div>
-                <div><strong>Air:</strong> Thin & sharp (S) vs Wider & softer (SH)</div>
-                <div><strong>Lips:</strong> Relaxed (S) vs Slightly rounded (SH)</div>
+    if (type === "S") {
+        helpHTML = `
+            <div class="bg-blue-950 border border-blue-600/40 p-4 rounded-2xl mb-4 text-sm">
+                <div class="font-semibold text-blue-400 mb-1">S Sound Help</div>
+                <div>Tongue forward, close to upper teeth ridge</div>
+                <div>Thin, sharp air → <span class="font-mono">sssss</span></div>
+                <div>Lips relaxed or slightly smiling</div>
             </div>
         `;
-    } else {
-        guide = `
-            <div class="bg-slate-950 border border-slate-700 rounded-2xl p-4 mb-4 text-sm">
-                <div class="font-semibold text-emerald-400 mb-2">Z vs G Help</div>
-                <div><strong>Z:</strong> Continuous buzzing (can hold it)</div>
-                <div><strong>G:</strong> Short stop + release (cannot hold it)</div>
+    } 
+    else if (type === "SH") {
+        helpHTML = `
+            <div class="bg-orange-950 border border-orange-600/40 p-4 rounded-2xl mb-4 text-sm">
+                <div class="font-semibold text-orange-400 mb-1">SH Sound Help</div>
+                <div>Tongue slightly back and rounded</div>
+                <div>Softer air through wider channel → <span class="font-mono">shhhhh</span></div>
+                <div>Lips slightly rounded</div>
+            </div>
+        `;
+    } 
+    else if (type === "Z") {
+        helpHTML = `
+            <div class="bg-emerald-950 border border-emerald-600/40 p-4 rounded-2xl mb-4 text-sm">
+                <div class="font-semibold text-emerald-400 mb-1">Z Sound Help</div>
+                <div>Tongue forward near upper teeth</div>
+                <div>Continuous buzzing sound (vocal cords vibrate)</div>
+                <div>You can hold it: <span class="font-mono">zzzzzz</span></div>
+            </div>
+        `;
+    } 
+    else if (type === "G") {
+        helpHTML = `
+            <div class="bg-green-950 border border-green-600/40 p-4 rounded-2xl mb-4 text-sm">
+                <div class="font-semibold text-green-400 mb-1">G Sound Help</div>
+                <div>Tongue back, touching soft palate</div>
+                <div>Short stop + release sound</div>
+                <div>Cannot hold it (quick "guh")</div>
             </div>
         `;
     }
@@ -129,11 +196,12 @@ function practiceWord(word, type, cue) {
                 <div class="text-emerald-400">${cue}</div>
             </div>
 
-            ${guide}
+            ${helpHTML}
 
             <div class="flex gap-3">
                 <button onclick="closeModal()" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-2xl">Close</button>
-                <button onclick="markPracticed('${word}')" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
+                <button onclick="markAsPracticed('${word}', '${type}')" 
+                        class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-medium">
                     Mark as Practiced
                 </button>
             </div>
@@ -141,10 +209,16 @@ function practiceWord(word, type, cue) {
     `;
 }
 
-function markPracticed(word) {
+function markAsPracticed(word, type) {
     closeModal();
-    alert(`Good job! You practiced "${word}".`);
-    // Later we can save this to backend
+
+    if (!userProgress.practicedWords.includes(word)) {
+        userProgress.practicedWords.push(word);
+        userProgress.totalPracticed = userProgress.practicedWords.length;
+    }
+
+    saveProgress();
+    alert(`Great! You practiced "${word}". Progress saved.`);
 }
 
 // ==================== MODAL ====================
@@ -169,8 +243,9 @@ function closeModal() {
     if (modal) modal.remove();
 }
 
-// Init
+// ==================== INIT ====================
 function init() {
-    console.log('%c[Drona Lingua] main.js loaded successfully', 'color:#22c55e');
+    console.log('%c[Drona Lingua] Updated with contextual help + performance tracking', 'color:#22c55e');
 }
+
 window.onload = init;
