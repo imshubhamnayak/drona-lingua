@@ -5,98 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drona Lingua</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body { font-family: system-ui, sans-serif; }
-        .screen { display: none; }
-        .screen.active { display: block; }
-        canvas { background: #1f2937; border-radius: 12px; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200 min-h-screen">
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-6">
 
-    <!-- USERNAME SCREEN -->
-    <div id="username-screen" class="screen active flex items-center justify-center min-h-screen p-6 bg-slate-950">
-        <div class="max-w-md w-full bg-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-700">
-            <div class="text-center mb-8">
-                <div class="w-20 h-20 mx-auto bg-orange-600 rounded-2xl flex items-center justify-center text-5xl mb-6">🗣️</div>
-                <h1 class="text-4xl font-bold tracking-tight">Drona Lingua</h1>
-                <p class="text-slate-400 mt-3 text-lg">Master Sa vs Sha • Z vs G</p>
-            </div>
-            
-            <input 
-                id="username-input" 
-                type="text" 
-                placeholder="Enter your name" 
-                class="w-full bg-slate-800 border border-slate-700 text-white rounded-2xl px-6 py-5 text-lg focus:outline-none focus:border-orange-500"
-            >
-            
-            <button 
-                onclick="startWithUsername()"
-                class="w-full mt-8 bg-orange-600 hover:bg-orange-500 py-5 rounded-2xl font-semibold text-xl transition-all active:scale-95">
-                Start Learning →
-            </button>
-        </div>
+    <div class="max-w-md w-full bg-slate-900 rounded-3xl p-10 text-center">
+        <div class="mx-auto w-24 h-24 bg-orange-600 rounded-3xl flex items-center justify-center text-6xl mb-6">🗣️</div>
+        <h1 class="text-4xl font-bold mb-2">Drona Lingua</h1>
+        <p class="text-slate-400 mb-8">Master Sa vs Sha • Z vs G</p>
+
+        <input id="username-input" type="text" placeholder="Enter your name" 
+               class="w-full bg-slate-800 rounded-2xl px-6 py-5 text-lg mb-6">
+
+        <button onclick="startApp()" 
+                class="w-full bg-orange-600 hover:bg-orange-500 py-6 rounded-2xl text-2xl font-semibold">
+            Start Learning →
+        </button>
     </div>
 
-    <!-- MAIN PRACTICE APP -->
-    <div id="main-app" class="screen min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-slate-900 border-b border-slate-700 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-orange-600 rounded-2xl flex items-center justify-center text-2xl">🗣️</div>
-                <div>
-                    <div class="font-bold text-xl">Drona Lingua</div>
-                    <div id="display-username" class="text-sm text-slate-400">Guest</div>
-                </div>
-            </div>
-            
-            <button onclick="showPerformance()" 
-                    class="flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm font-medium">
-                <i class="fa-solid fa-chart-bar"></i>
-                Progress
-            </button>
-        </header>
-
-        <div class="flex-1 p-6 overflow-auto">
-            <div class="text-center mb-8">
-                <div id="current-word" class="text-7xl font-bold mb-3"></div>
-                <div id="roman" class="text-2xl text-orange-400 font-medium"></div>
-            </div>
-
-            <div id="cue" class="text-center text-slate-400 text-lg mb-8 min-h-[60px]"></div>
-
-            <!-- Waveforms -->
-            <div class="grid grid-cols-2 gap-6 mb-10">
-                <div class="text-center">
-                    <p class="text-xs uppercase tracking-widest text-slate-500 mb-3">Correct</p>
-                    <canvas id="correctWaveform" width="280" height="110" class="w-full rounded-2xl"></canvas>
-                </div>
-                <div class="text-center">
-                    <p class="text-xs uppercase tracking-widest text-slate-500 mb-3">You</p>
-                    <canvas id="userWaveform" width="280" height="110" class="w-full rounded-2xl"></canvas>
-                </div>
-            </div>
-
-            <button id="recordBtn"
-                    onclick="isRecording ? stopRecording() : startRecording()"
-                    class="w-full py-7 bg-orange-600 hover:bg-orange-500 rounded-3xl text-2xl font-semibold flex items-center justify-center gap-4 shadow-lg transition-all active:scale-[0.97]">
-                <i class="fa-solid fa-microphone text-3xl"></i>
-                <span id="record-text">Record & Compare</span>
-            </button>
-
-            <div id="feedback" class="mt-8 text-center text-2xl font-medium min-h-[80px]"></div>
-        </div>
-
-        <!-- Bottom Bar -->
-        <div class="p-4 border-t border-slate-700 bg-slate-900">
-            <button onclick="nextWord()" 
-                    class="w-full py-5 bg-slate-800 hover:bg-slate-700 rounded-2xl text-lg font-medium">
-                Next Word →
-            </button>
-        </div>
-    </div>
-
-    <script src="js/main.js"></script>
+    <script>
+        function startApp() {
+            const name = document.getElementById('username-input').value.trim();
+            if (name) {
+                localStorage.setItem('dronaUsername', name);
+            }
+            window.location.href = "practice.html";   // We'll create this next if needed
+        }
+    </script>
 </body>
 </html>
