@@ -3,150 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance • Drona Lingua</title>
+    <title>Progress - Drona Lingua</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: system-ui, sans-serif; }
+        .progress-bar { transition: width 1s ease; }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-200">
-    <div class="max-w-5xl mx-auto p-6">
-        
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+
+    <div class="max-w-2xl mx-auto p-6">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-bold">Learning Performance</h1>
-                <p class="text-slate-400" id="performance-user"></p>
-            </div>
-            <a href="index.html" 
-               class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm flex items-center gap-x-2">
+        <div class="flex items-center justify-between mb-8">
+            <button onclick="window.location.href='index.html'" 
+                    class="flex items-center gap-2 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-arrow-left"></i>
-                <span>Back to Modules</span>
-            </a>
+                Back to Practice
+            </button>
+            <h1 class="text-3xl font-bold">Your Progress</h1>
         </div>
 
-        <!-- Overall Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-                <div class="text-sm text-slate-400">Total Words Practiced</div>
-                <div class="text-5xl font-bold mt-2 text-emerald-400" id="total-practiced">0</div>
+        <div id="progress-content" class="space-y-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-slate-900 rounded-3xl p-6 text-center">
+                    <div class="text-5xl font-bold text-orange-400" id="stat-score">0</div>
+                    <div class="text-slate-400 mt-1">Total Score</div>
+                </div>
+                <div class="bg-slate-900 rounded-3xl p-6 text-center">
+                    <div class="text-5xl font-bold text-emerald-400" id="stat-streak">0</div>
+                    <div class="text-slate-400 mt-1">Day Streak 🔥</div>
+                </div>
             </div>
-            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-                <div class="text-sm text-slate-400">Modules Completed</div>
-                <div class="text-5xl font-bold mt-2 text-emerald-400" id="modules-completed">0</div>
+
+            <div class="bg-slate-900 rounded-3xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="font-medium">Level <span id="stat-level" class="text-orange-400 font-bold">1</span></div>
+                    <div class="text-sm text-slate-400" id="stat-words">0 words practiced</div>
+                </div>
+                <div class="h-3 bg-slate-800 rounded-full overflow-hidden">
+                    <div id="level-progress" class="h-3 bg-gradient-to-r from-orange-500 to-amber-500 progress-bar w-1/5"></div>
+                </div>
             </div>
-            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-                <div class="text-sm text-slate-400">Average Score</div>
-                <div class="text-5xl font-bold mt-2 text-emerald-400" id="average-score">0</div>
+
+            <!-- Module Progress -->
+            <div>
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check"></i> Module Progress
+                </h2>
+                <div id="module-list" class="space-y-3"></div>
             </div>
         </div>
-
-        <!-- Module Progress List -->
-        <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
-            <h3 class="font-semibold mb-5 flex items-center gap-x-2">
-                <i class="fa-solid fa-list-check"></i>
-                <span>Module-wise Progress</span>
-            </h3>
-            
-            <div id="module-progress-list" class="space-y-4">
-                <!-- Populated dynamically by JavaScript -->
-            </div>
-        </div>
-
     </div>
 
     <script>
-        const BACKEND_URL = "https://drona-lingua.onrender.com";
+        function loadProgress() {
+            const username = localStorage.getItem('dronaUsername') || "Guest";
+            const progress = JSON.parse(localStorage.getItem('dronaLinguaProgress') || '{}');
 
-        async function loadPerformance() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('user');
+            document.getElementById('stat-score').textContent = progress.score || 0;
+            document.getElementById('stat-streak').textContent = progress.streak || 0;
+            document.getElementById('stat-level').textContent = progress.level || 1;
+            document.getElementById('stat-words').textContent = `${progress.totalWordsPracticed || 0} words practiced`;
 
-            if (!username) {
-                document.body.innerHTML = `<div class="p-10 text-center text-red-400">No user found. Please login from the main page.</div>`;
-                return;
-            }
+            // Level progress (simple 20% per level for demo)
+            const levelProgress = Math.min(((progress.level || 1) - 1) * 20 + 10, 100);
+            document.getElementById('level-progress').style.width = `${levelProgress}%`;
 
-            document.getElementById('performance-user').innerText = `Progress for: ${username}`;
-
-            try {
-                const res = await fetch(`${BACKEND_URL}/get-progress/${username}`);
-                if (!res.ok) {
-                    document.getElementById('module-progress-list').innerHTML = 
-                        `<p class="text-slate-400 p-4">No progress found yet. Start practicing from the main page!</p>`;
-                    return;
-                }
-
-                const data = await res.json();
-
-                // === Calculate Overall Stats ===
-                let totalPracticed = 0;
-                let totalScore = 0;
-                let modulesWithProgress = 0;
-
-                const moduleProgress = data.modules || {};
-
-                Object.values(moduleProgress).forEach(mod => {
-                    totalPracticed += mod.completed || 0;
-                    if (mod.score && mod.score > 0) {
-                        totalScore += mod.score;
-                        modulesWithProgress++;
-                    }
-                });
-
-                const averageScore = modulesWithProgress > 0 ? Math.round(totalScore / modulesWithProgress) : 0;
-                const modulesCompleted = Object.keys(moduleProgress).length;
-
-                // Update Stats Cards
-                document.getElementById('total-practiced').innerText = totalPracticed;
-                document.getElementById('modules-completed').innerText = modulesCompleted;
-                document.getElementById('average-score').innerText = averageScore;
-
-                // === Render Module Progress List ===
-                const container = document.getElementById('module-progress-list');
-                container.innerHTML = '';
-
-                // You can expand this list with all 20 modules later
-                Object.entries(moduleProgress).forEach(([modId, progress]) => {
-                    const completed = progress.completed || 0;
-                    const score = progress.score || 0;
-                    const percentage = completed > 0 ? Math.round((completed / (progress.totalWords || 10)) * 100) : 0;
-
-                    const div = document.createElement('div');
-                    div.className = `bg-slate-800 border border-slate-700 p-4 rounded-2xl flex justify-between items-center`;
-                    div.innerHTML = `
-                        <div class="flex-1">
-                            <div class="font-medium">${modId}</div>
-                            <div class="text-xs text-slate-400 mt-1">${completed} words practiced</div>
-                        </div>
-                        
-                        <div class="flex items-center gap-x-6">
-                            <div class="text-right">
-                                <div class="text-emerald-400 font-bold">${score}</div>
-                                <div class="text-xs text-slate-400">Score</div>
-                            </div>
-                            
-                            <div class="w-24">
-                                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                                    <div class="h-2 bg-emerald-500 rounded-full" style="width: ${percentage}%"></div>
-                                </div>
-                                <div class="text-xs text-right mt-1 text-slate-400">${percentage}%</div>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-
-                if (Object.keys(moduleProgress).length === 0) {
-                    container.innerHTML = `<p class="text-slate-400 p-4">No modules started yet.</p>`;
-                }
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('module-progress-list').innerHTML = 
-                    `<p class="text-red-400 p-4">Failed to load performance data.</p>`;
-            }
+            // Mock module progress (you can make this dynamic later)
+            const moduleList = document.getElementById('module-list');
+            moduleList.innerHTML = `
+                <div class="bg-slate-800 rounded-2xl p-4 flex justify-between items-center">
+                    <div>Module 1-5: Basic Sounds</div>
+                    <div class="text-emerald-400">Completed</div>
+                </div>
+                <div class="bg-slate-800 rounded-2xl p-4 flex justify-between items-center">
+                    <div>Module 6-10: Minimal Pairs</div>
+                    <div class="text-orange-400">In Progress</div>
+                </div>
+                <div class="bg-slate-800 rounded-2xl p-4 flex justify-between items-center opacity-60">
+                    <div>Module 11-20: Advanced Sentences</div>
+                    <div>Locked</div>
+                </div>
+            `;
         }
 
-        window.onload = loadPerformance;
+        window.onload = loadProgress;
     </script>
 </body>
 </html>
