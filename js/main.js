@@ -10,35 +10,18 @@ let isRecording = false;
 let mediaRecorder;
 let audioChunks = [];
 
-// 20 Progressive Modules with Sa/Sha & Z/G focus
+// Practice Words (expandable to 20+ modules)
 const practiceWords = [
-    // Module 1-5: Basic Sounds
     { hindi: "साथ", roman: "saath", expected: "saath", type: "S", cue: "Smile lightly, thin sharp hiss" },
     { hindi: "शाम", roman: "shaam", expected: "shaam", type: "SH", cue: "Round lips slightly, soft hush" },
     { hindi: "सब", roman: "sab", expected: "sab", type: "S", cue: "Tongue forward, sharp air" },
     { hindi: "शेर", roman: "sher", expected: "sher", type: "SH", cue: "Tongue slightly back" },
     { hindi: "साल", roman: "saal", expected: "saal", type: "S", cue: "Sharp hiss" },
-    
-    // Module 6-10: More Pairs
     { hindi: "शादी", roman: "shaadi", expected: "shaadi", type: "SH", cue: "Soft air, rounded lips" },
     { hindi: "सामान", roman: "samaan", expected: "samaan", type: "S", cue: "Clear 's' sound" },
     { hindi: "शहर", roman: "shahar", expected: "shahar", type: "SH", cue: "Hush sound" },
     { hindi: "zoo", roman: "zoo", expected: "zoo", type: "Z", cue: "Vibrate vocal cords - zzz" },
-    { hindi: "go", roman: "go", expected: "go", type: "G", cue: "Hard 'g' like goat" },
-    
-    // Module 11-15: Sentences
-    { hindi: "साथ में शाम", roman: "saath mein shaam", expected: "saath mein shaam", type: "Mixed", cue: "Differentiate Sa and Sha" },
-    { hindi: "शेर को साथ दो", roman: "sher ko saath do", expected: "sher ko saath do", type: "Mixed", cue: "Clear difference" },
-    { hindi: "साल भर का सामान", roman: "saal bhar ka samaan", expected: "saal bhar ka samaan", type: "S", cue: "Focus on S" },
-    { hindi: "शहर की शादी", roman: "shahar ki shaadi", expected: "shahar ki shaadi", type: "SH", cue: "Focus on SH" },
-    { hindi: "zoo में go", roman: "zoo mein go", expected: "zoo mein go", type: "Z/G", cue: "Z vs G" },
-    
-    // Module 16-20: Advanced
-    { hindi: "सुबह शहर की सैर", roman: "subah shahar ki sair", expected: "subah shahar ki sair", type: "Mixed", cue: "Multiple sounds" },
-    { hindi: "सामान शेर के साथ", roman: "samaan sher ke saath", expected: "samaan sher ke saath", type: "Mixed", cue: "Practice flow" },
-    { hindi: "ज़ोर से बोलो", roman: "zor se bolo", expected: "zor se bolo", type: "Z", cue: "Strong Z sound" },
-    { hindi: "गर्म पानी", roman: "garm paani", expected: "garm paani", type: "G", cue: "Hard G" },
-    { hindi: "शाम को साथ चलो", roman: "shaam ko saath chalo", expected: "shaam ko saath chalo", type: "Mixed", cue: "Final challenge" }
+    { hindi: "go", roman: "go", expected: "go", type: "G", cue: "Hard 'g' like goat" }
 ];
 
 function loadProgress() {
@@ -60,11 +43,13 @@ function saveProgress() {
 }
 
 function updateUI() {
-    document.getElementById('display-username').textContent = username || "Guest";
-    document.getElementById('display-level').textContent = level;
+    const usernameEl = document.getElementById('display-username');
+    const levelEl = document.getElementById('display-level');
+    if (usernameEl) usernameEl.textContent = username || "Guest";
+    if (levelEl) levelEl.textContent = level;
 }
 
-// Username Screen
+// Username Flow
 function startWithUsername() {
     const input = document.getElementById('username-input').value.trim();
     if (input) {
@@ -94,14 +79,13 @@ function nextWord() {
 }
 
 function clearWaveforms() {
-    const canvases = document.querySelectorAll('canvas');
-    canvases.forEach(canvas => {
+    document.querySelectorAll('canvas').forEach(canvas => {
         const ctx = canvas.getContext('2d');
         if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 }
 
-// Recording
+// Recording Functions
 async function startRecording() {
     if (isRecording) return;
     try {
@@ -116,7 +100,7 @@ async function startRecording() {
         isRecording = true;
         document.getElementById('recordBtn').innerHTML = `<i class="fa-solid fa-stop"></i> Stop Recording`;
     } catch (err) {
-        alert("Microphone access needed");
+        alert("Please allow microphone access");
     }
 }
 
@@ -129,7 +113,6 @@ function stopRecording() {
 }
 
 function processRecording() {
-    // Simulate accuracy (in real version use speech recognition)
     const accuracy = Math.floor(Math.random() * 40) + 65;
     
     score += Math.floor(accuracy / 10);
@@ -155,16 +138,13 @@ function processRecording() {
     setTimeout(nextWord, 2200);
 }
 
-// Show Performance Page
 function showPerformance() {
-    if (username) {
-        localStorage.setItem('dronaUsername', username);
-    }
+    if (username) localStorage.setItem('dronaUsername', username);
     saveProgress();
     window.location.href = 'performance.html';
 }
 
-// Initialize App
+// Initialize
 function initApp() {
     loadProgress();
     if (username) {
@@ -176,7 +156,7 @@ function initApp() {
 
 window.onload = initApp;
 
-// Make functions globally available for onclick
+// Global exposure for onclick handlers
 window.startWithUsername = startWithUsername;
 window.showMainApp = showMainApp;
 window.nextWord = nextWord;
