@@ -1,4 +1,4 @@
-// ==================== DRONA LINGUA - COMPLETE MAIN.JS ====================
+// ==================== DRONA LINGUA - FIXED MAIN.JS ====================
 
 let username = localStorage.getItem('dronaUsername') || "";
 let score = 0;
@@ -10,7 +10,7 @@ let isRecording = false;
 let mediaRecorder;
 let audioChunks = [];
 
-// Practice Words (expandable to 20+ modules)
+// Practice Words
 const practiceWords = [
     { hindi: "साथ", roman: "saath", expected: "saath", type: "S", cue: "Smile lightly, thin sharp hiss" },
     { hindi: "शाम", roman: "shaam", expected: "shaam", type: "SH", cue: "Round lips slightly, soft hush" },
@@ -19,9 +19,7 @@ const practiceWords = [
     { hindi: "साल", roman: "saal", expected: "saal", type: "S", cue: "Sharp hiss" },
     { hindi: "शादी", roman: "shaadi", expected: "shaadi", type: "SH", cue: "Soft air, rounded lips" },
     { hindi: "सामान", roman: "samaan", expected: "samaan", type: "S", cue: "Clear 's' sound" },
-    { hindi: "शहर", roman: "shahar", expected: "shahar", type: "SH", cue: "Hush sound" },
-    { hindi: "zoo", roman: "zoo", expected: "zoo", type: "Z", cue: "Vibrate vocal cords - zzz" },
-    { hindi: "go", roman: "go", expected: "go", type: "G", cue: "Hard 'g' like goat" }
+    { hindi: "शहर", roman: "shahar", expected: "shahar", type: "SH", cue: "Hush sound" }
 ];
 
 function loadProgress() {
@@ -42,6 +40,7 @@ function saveProgress() {
     }));
 }
 
+// Safe Update UI
 function updateUI() {
     const usernameEl = document.getElementById('display-username');
     const levelEl = document.getElementById('display-level');
@@ -66,7 +65,7 @@ function showMainApp() {
     nextWord();
 }
 
-// Practice Logic
+// Practice
 function nextWord() {
     currentWordIndex = (currentWordIndex + 1) % practiceWords.length;
     const word = practiceWords[currentWordIndex];
@@ -85,22 +84,20 @@ function clearWaveforms() {
     });
 }
 
-// Recording Functions
+// Recording
 async function startRecording() {
     if (isRecording) return;
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
-        
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
         mediaRecorder.onstop = processRecording;
-        
         mediaRecorder.start();
         isRecording = true;
         document.getElementById('recordBtn').innerHTML = `<i class="fa-solid fa-stop"></i> Stop Recording`;
     } catch (err) {
-        alert("Please allow microphone access");
+        alert("Microphone access needed");
     }
 }
 
@@ -114,11 +111,9 @@ function stopRecording() {
 
 function processRecording() {
     const accuracy = Math.floor(Math.random() * 40) + 65;
-    
     score += Math.floor(accuracy / 10);
     streak++;
     totalWordsPracticed++;
-    
     if (streak % 5 === 0 && level < 20) level++;
     
     saveProgress();
@@ -126,14 +121,9 @@ function processRecording() {
     
     const feedback = document.getElementById('feedback');
     const word = practiceWords[currentWordIndex];
-    
-    if (accuracy > 85) {
-        feedback.innerHTML = `<span class="text-emerald-400">Excellent! 🎉</span>`;
-    } else if (accuracy > 70) {
-        feedback.innerHTML = `<span class="text-orange-400">Good! Tip: ${word.cue}</span>`;
-    } else {
-        feedback.innerHTML = `<span class="text-red-400">Try again • ${word.cue}</span>`;
-    }
+    feedback.innerHTML = accuracy > 80 ? 
+        `<span class="text-emerald-400">Excellent! 🎉</span>` : 
+        `<span class="text-orange-400">Good! Tip: ${word.cue}</span>`;
     
     setTimeout(nextWord, 2200);
 }
@@ -144,7 +134,7 @@ function showPerformance() {
     window.location.href = 'performance.html';
 }
 
-// Initialize
+// Init
 function initApp() {
     loadProgress();
     if (username) {
@@ -156,7 +146,7 @@ function initApp() {
 
 window.onload = initApp;
 
-// Global exposure for onclick handlers
+// Expose functions for onclick
 window.startWithUsername = startWithUsername;
 window.showMainApp = showMainApp;
 window.nextWord = nextWord;
