@@ -7,76 +7,102 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .waveform { background: #1e2937; border-radius: 16px; padding: 16px; }
-        .streak { animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        body { font-family: system-ui, sans-serif; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        canvas { background: #1f2937; border-radius: 12px; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen">
 
-    <!-- Username Screen -->
-    <div id="username-screen" class="min-h-screen flex items-center justify-center p-4 hidden">
-        <div class="max-w-md w-full text-center">
-            <div class="text-6xl mb-6">🗣️</div>
-            <h1 class="text-4xl font-bold mb-2">Drona Lingua</h1>
-            <p class="text-slate-400 mb-8">Master Sa vs Sha</p>
-            <input type="text" id="username-input" placeholder="Enter your name" 
-                   class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-6 py-4 text-center text-lg mb-6">
-            <button onclick="startWithUsername()" 
-                    class="w-full py-4 bg-orange-600 hover:bg-orange-500 rounded-2xl font-semibold text-lg">
-                Start Training →
+    <!-- ==================== USERNAME SCREEN ==================== -->
+    <div id="username-screen" class="screen active flex items-center justify-center min-h-screen p-6">
+        <div class="max-w-md w-full bg-slate-900 rounded-3xl p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 mx-auto bg-orange-600 rounded-2xl flex items-center justify-center text-4xl mb-4">
+                    🗣️
+                </div>
+                <h1 class="text-3xl font-bold">Drona Lingua</h1>
+                <p class="text-slate-400 mt-2">Master your pronunciation</p>
+            </div>
+            
+            <input 
+                id="username-input" 
+                type="text" 
+                placeholder="Enter your name" 
+                class="w-full bg-slate-800 text-white rounded-2xl px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+            
+            <button 
+                onclick="startWithUsername()"
+                class="w-full mt-6 bg-orange-600 hover:bg-orange-500 py-4 rounded-2xl font-semibold text-lg transition">
+                Start Learning →
             </button>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
-    <div id="main-app" class="hidden">
-        <div class="p-4 border-b border-slate-800 flex justify-between items-center">
-            <div onclick="showDashboard()" class="flex items-center gap-3 cursor-pointer">
-                <span class="text-2xl">🗣️</span>
+    <!-- ==================== MAIN APP ==================== -->
+    <div id="main-app" class="screen min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-slate-900 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-orange-600 rounded-2xl flex items-center justify-center text-xl">🗣️</div>
                 <div>
-                    <div class="font-semibold" id="display-username">User</div>
-                    <div class="text-xs text-emerald-400">Level <span id="display-level">1</span></div>
+                    <div class="font-bold text-xl">Drona Lingua</div>
+                    <div id="display-username" class="text-sm text-slate-400">Guest</div>
                 </div>
             </div>
-            <button onclick="showPerformance()" class="px-5 py-2 bg-slate-800 rounded-2xl text-sm flex items-center gap-2">
-                <i class="fa-solid fa-chart-bar"></i> Progress
-            </button>
-        </div>
-
-        <!-- Practice Screen -->
-        <div id="practice-screen" class="p-4">
-            <div class="bg-slate-900 rounded-3xl p-8 text-center mb-8">
-                <div class="text-slate-400 text-sm mb-3">Practice this word</div>
-                <div id="current-word" class="text-6xl font-bold mb-3">साथ</div>
-                <div id="roman" class="text-emerald-400 text-2xl">saath</div>
-                <div id="cue" class="text-xs text-slate-400 mt-6 italic"></div>
+            <div class="flex items-center gap-6">
+                <div class="text-right">
+                    <div class="text-sm text-emerald-400">Level <span id="display-level" class="font-bold">1</span></div>
+                </div>
+                <button onclick="showPerformance()" 
+                        class="px-5 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl flex items-center gap-2">
+                    <i class="fa-solid fa-chart-bar"></i>
+                    Progress
+                </button>
             </div>
+        </header>
+
+        <!-- Practice Area -->
+        <div class="flex-1 p-6 flex flex-col">
+            <div class="text-center mb-6">
+                <div id="current-word" class="text-6xl font-bold text-white mb-2"></div>
+                <div id="roman" class="text-xl text-orange-400"></div>
+            </div>
+
+            <div class="text-center text-slate-400 text-sm mb-4" id="cue"></div>
 
             <!-- Waveforms -->
-            <div class="grid grid-cols-1 gap-6 mb-8">
-                <div class="waveform">
-                    <p class="text-xs text-slate-400 mb-2">✅ Correct</p>
-                    <canvas id="correctWaveform" width="700" height="110" class="w-full"></canvas>
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div>
+                    <p class="text-xs text-slate-500 mb-2 text-center">Correct Pronunciation</p>
+                    <canvas id="correctWaveform" width="300" height="120" class="w-full rounded-2xl"></canvas>
                 </div>
-                <div class="waveform">
-                    <p class="text-xs text-slate-400 mb-2">🎤 Your Voice</p>
-                    <canvas id="userWaveform" width="700" height="110" class="w-full"></canvas>
+                <div>
+                    <p class="text-xs text-slate-500 mb-2 text-center">Your Pronunciation</p>
+                    <canvas id="userWaveform" width="300" height="120" class="w-full rounded-2xl"></canvas>
                 </div>
             </div>
 
-            <div class="flex gap-4">
-                <button onclick="startRecording()" id="recordBtn"
-                        class="flex-1 bg-orange-600 hover:bg-orange-500 py-6 rounded-3xl text-lg font-semibold flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-microphone"></i> Record & Compare
-                </button>
-                <button onclick="nextWord()" 
-                        class="flex-1 bg-slate-700 hover:bg-slate-600 py-6 rounded-3xl text-lg font-semibold">
-                    Next Word →
-                </button>
-            </div>
+            <!-- Record Button -->
+            <button id="recordBtn"
+                    onclick="isRecording ? stopRecording() : startRecording()"
+                    class="w-full py-6 bg-orange-600 hover:bg-orange-500 rounded-3xl text-xl font-semibold flex items-center justify-center gap-3 transition">
+                <i class="fa-solid fa-microphone"></i>
+                <span>Record & Compare</span>
+            </button>
 
-            <div id="feedback" class="mt-8 min-h-[120px] text-center"></div>
+            <!-- Feedback -->
+            <div id="feedback" class="mt-6 text-center text-xl min-h-[60px]"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="border-t border-slate-700 bg-slate-900 p-4">
+            <button onclick="nextWord()" 
+                    class="w-full py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-medium">
+                Next Word →
+            </button>
         </div>
     </div>
 
