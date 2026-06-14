@@ -3,76 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drona Lingua • 20 Modules</title>
+    <title>Drona Lingua</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-slate-950 text-slate-200">
-    <div class="max-w-6xl mx-auto p-6">
-        
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-4xl font-bold">Drona Lingua</h1>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+
+    <!-- Username Screen -->
+    <div id="username-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-md w-full">
+            <div class="text-center mb-12">
+                <div class="text-6xl mb-4">🗣️</div>
+                <h1 class="text-4xl font-bold">Drona Lingua</h1>
+                <p class="text-slate-400 mt-2">Master your pronunciation</p>
+            </div>
             
-            <div id="header-user" class="hidden flex items-center gap-x-3">
-                <span id="user-display" class="text-sm text-slate-400"></span>
-                
-                <button onclick="goToPerformance()" 
-                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-sm flex items-center gap-x-2">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Performance</span>
-                </button>
-                
-                <button onclick="logout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
-                    Logout
+            <div class="bg-slate-900 rounded-3xl p-8">
+                <h2 class="text-xl font-semibold mb-6 text-center">Enter Your Name</h2>
+                <input type="text" id="username-input" placeholder="Your Name" 
+                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-6 py-4 text-lg text-center focus:outline-none">
+                <button onclick="startWithUsername()" 
+                        class="w-full mt-6 py-4 bg-orange-600 hover:bg-orange-500 rounded-2xl font-semibold text-lg">
+                    Start Training →
                 </button>
             </div>
         </div>
+    </div>
 
-        <!-- Login Section -->
-        <div id="login-section">
-            <div class="max-w-md mx-auto bg-slate-900 border border-slate-700 rounded-3xl p-8">
-                <h2 class="text-2xl font-semibold mb-6 text-center">Start Learning</h2>
-                <input id="username" type="text" placeholder="Enter your name" 
-                       class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 mb-4">
-                <button onclick="loginUser()" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">
-                    Continue
-                </button>
+    <!-- Main App Screen -->
+    <div id="main-app" class="hidden min-h-screen">
+        <!-- Header -->
+        <div class="p-4 border-b border-slate-800 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🗣️</span>
+                <div>
+                    <div class="font-semibold" id="display-username">User</div>
+                    <div class="text-xs text-emerald-400">Level <span id="display-level">1</span></div>
+                </div>
             </div>
+            <button onclick="showPerformance()" class="px-5 py-2 bg-slate-800 rounded-2xl text-sm flex items-center gap-2">
+                <i class="fa-solid fa-chart-bar"></i> Progress
+            </button>
         </div>
 
-        <!-- Main Modules Section -->
-        <div id="main-content" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold">Your 20 Modules</h2>
-            </div>
-
-            <!-- Modules List -->
-            <div id="modules-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4">
+            <h2 class="text-2xl font-semibold mb-6">Choose Module</h2>
+            
+            <div class="grid grid-cols-2 gap-4" id="modules-grid">
                 <!-- Populated by JS -->
             </div>
         </div>
-
-        <!-- Practice Area (Dedicated Section) -->
-        <div id="practice-area" class="hidden mt-8">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h2 id="practice-module-title" class="text-2xl font-semibold"></h2>
-                    <p id="practice-module-subtitle" class="text-slate-400"></p>
-                </div>
-                <button onclick="backToModules()" 
-                        class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-2xl text-sm">
-                    ← Back to Modules
-                </button>
-            </div>
-
-            <!-- Words List -->
-            <div id="practice-words-list" class="space-y-3">
-                <!-- Words will be loaded here as list -->
-            </div>
-        </div>
-
     </div>
 
     <script src="js/main.js"></script>
