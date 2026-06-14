@@ -11,28 +11,35 @@
 </head>
 <body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-6">
 
-    <div class="max-w-md w-full bg-slate-900 rounded-3xl p-10 text-center">
+    <div class="max-w-md w-full bg-slate-900 rounded-3xl p-10 text-center border border-slate-700">
         <div class="mx-auto w-24 h-24 bg-orange-600 rounded-3xl flex items-center justify-center text-6xl mb-6">🗣️</div>
         <h1 class="text-4xl font-bold mb-2">Drona Lingua</h1>
         <p class="text-slate-400 mb-8">Master Sa vs Sha • Z vs G</p>
 
-        <input id="username-input" type="text" placeholder="Enter your name" 
-               class="w-full bg-slate-800 rounded-2xl px-6 py-5 text-lg mb-6">
+        <input id="username-input" 
+               type="text" 
+               placeholder="Enter your name" 
+               class="w-full bg-slate-800 rounded-2xl px-6 py-5 text-lg mb-6 focus:outline-none focus:ring-2 focus:ring-orange-500">
 
-        <button onclick="startApp()" 
-                class="w-full bg-orange-600 hover:bg-orange-500 py-6 rounded-2xl text-2xl font-semibold">
+        <button onclick="startLearning()" 
+                class="w-full bg-orange-600 hover:bg-orange-500 py-6 rounded-2xl text-2xl font-semibold transition-all active:scale-95">
             Start Learning →
         </button>
     </div>
 
     <script>
-        function startApp() {
+        function startLearning() {
             const name = document.getElementById('username-input').value.trim();
             if (name) {
                 localStorage.setItem('dronaUsername', name);
             }
-            window.location.href = "practice.html";   // We'll create this next if needed
+            alert("✅ Button works! Going to practice screen...");
+            // Change to your actual next page
+            window.location.href = "practice.html";  
         }
+
+        // For testing - remove later
+        console.log("%c✅ index.html loaded successfully", "color: lime; font-size: 16px");
     </script>
 </body>
 </html>
