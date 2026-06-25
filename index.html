@@ -7,70 +7,79 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: system-ui, sans-serif; }
-        .screen { display: none; }
-        .screen.active { display: block; }
-        canvas { background: #1f2937; border-radius: 12px; }
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .section-card {
+            transition: all 0.2s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .sound-tab {
+            transition: all 0.2s ease;
+        }
+        .sound-tab.active {
+            background-color: #1e2937;
+            color: white;
+            border-bottom: 3px solid #f97316;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200 min-h-screen">
+<body class="bg-slate-950 text-slate-200">
 
-    <!-- USERNAME SCREEN -->
-    <div id="username-screen" class="screen active flex items-center justify-center min-h-screen p-6">
-        <div class="max-w-md w-full bg-slate-900 rounded-3xl p-8 shadow-2xl">
-            <div class="text-center mb-8">
-                <div class="w-20 h-20 mx-auto bg-orange-600 rounded-2xl flex items-center justify-center text-5xl mb-6">🗣️</div>
-                <h1 class="text-4xl font-bold">Drona Lingua</h1>
-                <p class="text-slate-400 mt-2">Master Sa vs Sha • Z vs G</p>
-            </div>
-            
-            <input id="username-input" type="text" placeholder="Enter your name" 
-                   class="w-full bg-slate-800 border border-slate-700 rounded-2xl px-6 py-5 text-lg focus:outline-none focus:border-orange-500">
-            
-            <button onclick="startWithUsername()" 
-                    class="w-full mt-8 bg-orange-600 hover:bg-orange-500 py-5 rounded-2xl font-semibold text-xl transition-all">
-                Start Learning →
-            </button>
-        </div>
-    </div>
-
-    <!-- MAIN APP -->
-    <div id="main-app" class="screen min-h-screen flex flex-col">
-        <header class="bg-slate-900 border-b border-slate-700 px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-orange-600 rounded-2xl flex items-center justify-center text-2xl">🗣️</div>
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-orange-600 rounded-2xl flex items-center justify-center">
+                    <span class="font-bold text-white text-2xl">DL</span>
+                </div>
                 <div>
-                    <div class="font-bold">Drona Lingua</div>
-                    <div id="display-username" class="text-sm text-slate-400">Guest</div>
+                    <span class="font-semibold text-2xl">Drona Lingua</span>
                 </div>
             </div>
-            <button onclick="showPerformance()" class="px-5 py-2 bg-slate-800 rounded-2xl flex items-center gap-2">
-                <i class="fa-solid fa-chart-bar"></i> Progress
-            </button>
-        </header>
-
-        <div class="flex-1 p-6 flex flex-col">
-            <div class="text-center mb-8">
-                <div id="current-word" class="text-6xl font-bold mb-2"></div>
-                <div id="roman" class="text-2xl text-orange-400"></div>
+            
+            <div class="flex items-center gap-x-4">
+                <div class="flex items-center gap-x-2 bg-slate-800 px-4 py-1.5 rounded-2xl">
+                    <i class="fa-solid fa-fire text-orange-400"></i>
+                    <span class="font-medium">12 day streak</span>
+                </div>
+                <div class="w-9 h-9 bg-slate-700 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-user"></i>
+                </div>
             </div>
-            <div id="cue" class="text-center text-slate-400 mb-8"></div>
-
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div><canvas id="correctWaveform" width="280" height="110" class="w-full rounded-2xl"></canvas></div>
-                <div><canvas id="userWaveform" width="280" height="110" class="w-full rounded-2xl"></canvas></div>
-            </div>
-
-            <button id="recordBtn" onclick="toggleRecording()" 
-                    class="w-full py-7 bg-orange-600 rounded-3xl text-xl font-semibold flex items-center justify-center gap-3">
-                <i class="fa-solid fa-microphone"></i>
-                <span>Record & Compare</span>
-            </button>
-
-            <div id="feedback" class="mt-8 text-center text-xl min-h-[60px]"></div>
         </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-6 py-8">
+        
+        <!-- Welcome -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-semibold">Master your English sounds</h1>
+            <p class="text-slate-400 mt-2">Fix the sounds that hold you back in interviews and meetings.</p>
+        </div>
+
+        <!-- Sound Pair Selection -->
+        <div class="mb-6">
+            <div class="flex gap-3">
+                <button onclick="selectSoundPair('s-sh')" 
+                        class="sound-tab active px-6 py-3 rounded-2xl flex items-center gap-x-2 bg-slate-800 border border-slate-700">
+                    <span class="font-semibold">S vs SH</span>
+                </button>
+                <button onclick="selectSoundPair('z-g')" 
+                        class="sound-tab px-6 py-3 rounded-2xl flex items-center gap-x-2 bg-slate-800 border border-slate-700">
+                    <span class="font-semibold">Z vs G</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div id="main-content">
+            <!-- Content will be loaded here via JS -->
+        </div>
+
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
